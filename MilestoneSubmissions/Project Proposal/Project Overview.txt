@@ -1,0 +1,21 @@
+Team 011-8
+
+Team Name: LEARN!
+
+Team Members: Cadence Fong, Erubiel Huerta, Lilian Sobernheim, Liam Sweeney, Sophie Tu
+
+------------------------------------------------------------
+Lock-In Learn
+------------------------------------------------------------
+
+This application is a program that will both track your assignments and assist in planning study times. Each assignment will have a date, time, description, location, type and class associated with it to make assignments more manageable. The application will send users an automated email to remind them of upcoming deadlines. Users can choose the how many hours before the deadline they want to receive the reminder. The calendar for tracking assignments and events can be easily rearranged to allow for the flexible and changing schedule that is inherit to daily life. The application will have a message board to communicate with other users about study tips and plans. The users profile will allow for customization, including a profile picture and biography. 
+This application provides users with the ability to better manage their time by tracking and grouping assignments and events related to schooling and/or work. It allows for users to rearrange their study schedule, making it easy to make changes if something comes up. 
+
+For students, who want to better manage their time in relation to academics. Lock-in Learn is a web student planner that allows for schedule flexibility and goal setting. Unlike Google Calendar, our product is developed with students in mind.
+
+We will be using a Scrum Methodology to plan and divide work for this project. Additionally, we will use a project board to track the tasks assigned to each individual, along with the tasks that are completed or need to be completed. This will make it easy to track our progress and more efficiently assign tasks to each group member.
+
+Our team will be using Slack to communicate for the duration of this project. Additionally, our team will provide frequent updates to each other using Slack to ensure everyone is on target with their tasks.
+
+Team meeting: Thursdays at 5:00pm via Zoom 
+Weekly TA meeting: Tuesdays at 1:45pm via Zoom
