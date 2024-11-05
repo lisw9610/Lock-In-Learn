@@ -70,9 +70,21 @@ app.use(
   })
 );
 
+// *****************************************************
+// <!-- Section 4 : API Routes -->
+// *****************************************************
 
+app.get('/', (req,res) => {
+  res.redirect('/login');
+})
 
+app.get('/login', (req,res) => {
+  res.render('pages/login');
+})
 
+// app.post('/login', await (req,res) => {
+
+// })
 
 app.listen(3000);
 console.log('Server is listening on port 3000');
