@@ -70,7 +70,9 @@ app.use(
   })
 );
 
-
+app.get('/register', (req, res) => {
+  res.render('./pages/register');
+});
 
 
 
