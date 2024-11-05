@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS assignments;
-
 CREATE TABLE users (
     username varChar(50) PRIMARY KEY,
     password varChar(250) NOT NULL,
