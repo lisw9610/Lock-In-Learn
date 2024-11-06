@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    {{!-- <link rel="stylesheet" href="/css/styles.css">  --}}
+
+</head>
+<body>
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        
+        <div class="profile-card">
+            <div class="profile-picture">
+
+                <img src="{{profilePictureUrl}}" alt="Profile Picture" width="150" height="150">
+            </div>
+
+            <div class="profile-details">
+
+                <p><strong>Username:</strong> {{username}}</p>
+                
+                <p><strong>Email:</strong> {{email}}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
