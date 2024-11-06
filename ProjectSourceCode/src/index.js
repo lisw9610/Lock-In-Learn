@@ -86,6 +86,10 @@ app.get('/register', (req,res) => {
   res.render('./pages/register');
 })
 
+app.get('/profile', (req,res) => {
+  res.render('./pages/profile');
+})
+
 // app.post('/login', await (req,res) => {
 
 // })
