@@ -1,4 +1,4 @@
-//calendar from lab 4
+//utilized calendar from lab 4 - Sophie Tu
 const CALENDAR_EVENTS = [
     {
       name: 'Running',
@@ -110,6 +110,7 @@ const CALENDAR_EVENTS = [
     document.querySelector("#event_location").value = event.location;
     document.querySelector("#event_remote_url").value = event.url;
     document.querySelector("#event_attendees").value = event.attendees;
+    document.querySelector("#event_course_link").value = event.courseLink || ''; // Populate the course link
   
     updateLocationOptions(event.modality);
   
@@ -128,6 +129,7 @@ const CALENDAR_EVENTS = [
       location: document.querySelector('#event_location').value,
       url: document.querySelector('#event_remote_url').value,
       attendees: document.querySelector('#event_attendees').value,
+      courseLink: document.querySelector('#event_course_link').value, //saves the course link
     };
   
     updateDOM();
@@ -147,6 +149,13 @@ const CALENDAR_EVENTS = [
     }
   }
   
+  //input which users can fill in or update
+    <div class="form-group">
+        <label for="event_course_link">Course Link</label>
+        <input type="url" id="event_course_link" className="form-control" placeholder="Enter course link (optional)" />
+    </div>
+
+  
   /********************** PART B: 6.3: UPDATE DOM ******************************/
   
   function createEventElement(id) {
@@ -160,6 +169,16 @@ const CALENDAR_EVENTS = [
     const title = document.createElement('div');
     title.classList.add('col', 'event-title');
     title.innerHTML = event.name;
+    
+    // add the course link if it exists
+    if (event.courseLink) {
+        const courseLinkElement = document.createElement('a');
+        courseLinkElement.href = event.courseLink;
+        courseLinkElement.target = '_blank';
+        courseLinkElement.innerText = "View Course";
+        title.appendChild(courseLinkElement);
+    }
+    
     return title;
   }
   
@@ -196,32 +215,34 @@ const CALENDAR_EVENTS = [
   
   function updateTooltips() {
     const events = CALENDAR_EVENTS;
-  
+
     events.forEach((event, id) => {
-      const eventElement = document.querySelector(`#event-${id}`);
-  
-      if (eventElement) {
-        const tooltipContent = `
-          <strong>Name:</strong> ${event.name}<br>
-          <strong>Time:</strong> ${event.time || "N/A"}<br>
-          <strong>Location:</strong> ${event.location || "N/A"}
-        `;
-  
-        // Initialize Bootstrap tooltip using native JS
-        const tooltip = new bootstrap.Tooltip(eventElement, {
-          title: tooltipContent,
-          html: true,
-          placement: 'top',
-        });
-  
-        eventElement.addEventListener('mouseenter', () => {
-          tooltip.show();
-        });
-  
-        eventElement.addEventListener('mouseleave', () => {
-          tooltip.hide();
-        });
-      }
+        const eventElement = document.querySelector(`#event-${id}`);
+
+        if (eventElement) {
+            const tooltipContent = `
+                <strong>Name:</strong> ${event.name}<br>
+                <strong>Time:</strong> ${event.time || "N/A"}<br>
+                <strong>Location:</strong> ${event.location || "N/A"}<br>
+                ${event.courseLink ? `<strong>Course:</strong> <a href="${event.courseLink}" target="_blank">View Course</a>` : ''}
+            `;
+
+            // Initialize Bootstrap tooltip using native JS
+            const tooltip = new bootstrap.Tooltip(eventElement, {
+                title: tooltipContent,
+                html: true,
+                placement: 'top',
+            });
+
+            eventElement.addEventListener('mouseenter', () => {
+                tooltip.show();
+            });
+
+            eventElement.addEventListener('mouseleave', () => {
+                tooltip.hide();
+            });
+        }
     });
-  }
+}
+
   
