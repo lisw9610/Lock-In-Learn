@@ -1,0 +1,9 @@
+
+November 5th, 2024 (1:45pm-2:00pm)
+
+-Worked on login and registration page skeletons. Created project directory structure and set up required docker files.
+
+-Showed our login page graphics and that our docker container is able to be ran properly.
+
+-By next week, we hope to have completed a skeleton for all of our expected pages and have user registration, login, and profiles functional.
+
