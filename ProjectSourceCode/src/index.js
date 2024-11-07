@@ -82,43 +82,52 @@ app.get('/login', (req,res) => {
   res.render('./pages/login');
 })
 
-app.post('/login', async (req,res) => {
-  const username = req.body.username;
+app.post('/login', (req, res) => {
+	const username = req.body.username;
+	console.log(`Querying for username: ${username}`);
+	const query = 'SELECT password FROM users WHERE users.username = $1 LIMIT 1';
 
-  try{
-    const query = 'select * from users where username = $1 limit 1;'
-    const data = await db.oneOrNone(query, [username]);
+  // get the student_id based on the emailid
+  db.one(query, [username])
+    .then(async data => {
+		user.password = data.password;
+		// check if password from request matches with password in DB
+		const match = await bcrypt.compare(req.body.password, user.password);
+		
+		if(match) {
+			user.username = username;
 
-    if (!data) {
-      return res.render('pages/login', {
-        message: 'Invalid username or password',
-        error: true
-      });
-    }
-
-    const match = await bcrypt.compare(req.body.password, data.password);
-    
-    if (match) {
-        const user = {
-            username: data.username,
-            password: data.password
-        }
-        req.session.user = user; 
-        req.session.save(); 
-        res.redirect('/profile');
-      } 
-    
-    else {
-      return res.render('pages/login', {
-        message: 'Invalid username or password',
-        error: true
-      });
-    }
-  } catch (error) {
-      console.error('Error during login:', err);
-      res.redirect('login', { error: 'Login failed. Please try again.' });
-  }
-})
+			req.session.user = user;
+			req.session.save();
+			
+			res.status(200).json({
+				status: 'success',
+				message: 'Logged in successfully.'
+			});
+			
+			res.redirect('/discover');
+		} else {
+			res.status(400).json({
+				status: 'error',
+				message: 'Incorrect username or password.'
+			});
+			res.render('./pages/login', { 
+				message: `Incorrect password.`, 
+			});
+			
+		}
+    })
+    .catch(err => {
+		console.error(`Error:`, err);
+		
+		res.status(500).json({
+				status: 'error',
+				message: 'Username does not exist.'
+	    });
+			
+		res.redirect('/register');
+    });
+});
 
 app.get('/register', (req,res) => {
   res.render('./pages/register');
