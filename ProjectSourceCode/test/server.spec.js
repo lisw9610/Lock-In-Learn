@@ -37,12 +37,24 @@ describe('Test registering a user API', () => {
     chai
       .request(server)
       .post('/register')
-      .send({username: 'test_name', password: 'random', email: 'random@email.com'})
+      .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.equals('success');
-        // assert.strictEqual(res.body.message, 'Welcome!');
+        expect(res.body.message).to.equals('successfully registered a new user');
+        done();
+      });
+  });
+  it('Negative : /register. Checking invalid name', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({username: 'test_name', email: 'random@email.com', password: 'random'})
+      .end((err, res) => {
+        expect(res).to.have.status(409);
+        expect(res.body.message).to.equals('Username is already in use. Please try another');
         done();
       });
   });
 });
+
+

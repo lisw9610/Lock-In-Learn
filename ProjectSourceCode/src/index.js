@@ -136,7 +136,7 @@ app.post('/register', async (req, res) => {
 	await db.none(query, [username, email, hash])
 		.then(data => {
 			console.log('User registered successfully');
-      res.json({
+      res.status(200).json({
         status: 'success', 
         message: 'successfully registered a new user'})
 			// res.redirect('/login');
