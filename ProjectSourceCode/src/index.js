@@ -82,8 +82,61 @@ app.get('/login', (req,res) => {
   res.render('./pages/login');
 })
 
+app.post('/login', async (req,res) => {
+  const username = req.body.username;
+
+  try{
+    const query = 'select * from users where username = $1 limit 1;'
+    const data = await db.oneOrNone(query, [username]);
+
+    if (!data) {
+      return res.render('pages/login', {
+        message: 'Invalid username or password',
+        error: true
+      });
+    }
+
+    const match = await bcrypt.compare(req.body.password, data.password);
+    
+    if (match) {
+        const user = {
+            username: data.username,
+            password: data.password
+        }
+        req.session.user = user; 
+        req.session.save(); 
+        res.redirect('/profile');
+      } 
+    
+    else {
+      return res.render('pages/login', {
+        message: 'Invalid username or password',
+        error: true
+      });
+    }
+  } catch (error) {
+      console.error('Error during login:', err);
+      res.redirect('login', { error: 'Login failed. Please try again.' });
+  }
+})
+
 app.get('/register', (req,res) => {
   res.render('./pages/register');
+})
+
+app.post('/register', async (req,res) => {
+  const username = req.body.username;
+
+  try{
+      const hash = await bcrypt.hash(req.body.password, 10);
+      const query = 'insert into users (username, password) values ($1, $2);'
+      db.none(query, [username, hash]);
+
+      res.redirect('/login');
+  } catch (error) {
+      console.error('Error reigstering user:', error);
+      res.redirect('/register')
+  };
 })
 
 app.get('/profile', (req,res) => {
