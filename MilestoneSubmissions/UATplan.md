@@ -1,5 +1,5 @@
 # USER ACCEPTANCE TESTING PLAN 
-> 1. Successful Login
+### 1. Successful Login
 - A user cannot receive access to data until they fill out all mandatory fields and is authenticated.
     - **Test Data**:
         - username
@@ -14,7 +14,6 @@
         - username: 'random_test'
         - password: 'random_pass'
         - email: 'random@email.com'
-    
     - **Test Description**:
         - This is supposed to guide the user to the Registration page to enter unique values of an email, password, and username. Once the registration button is clicked, it sends a form of the data to the backend database to insert new values. 
         - **Result**: The user should now be redirected to the login page (if data is unique) with a confirmation message: "success".
