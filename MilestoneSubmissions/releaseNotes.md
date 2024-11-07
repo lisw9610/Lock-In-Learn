@@ -1,4 +1,4 @@
-# Release Notes for Study App v1.0.0
+# Release Notes for Lock-In Learn v1.0.0
 **Release Date: 2024-11-05**
 
 ## New Features
