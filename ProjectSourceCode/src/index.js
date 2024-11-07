@@ -124,20 +124,27 @@ app.get('/register', (req,res) => {
   res.render('./pages/register');
 })
 
-app.post('/register', async (req,res) => {
+app.post('/register', async (req, res) => {
+  //get the information posted by the register form
   const username = req.body.username;
+  const email = req.body.email;
+  const hash = await bcrypt.hash(req.body.password, 10);
 
-  try{
-      const hash = await bcrypt.hash(req.body.password, 10);
-      const query = 'insert into users (username, password) values ($1, $2);'
-      db.none(query, [username, hash]);
-
-      res.redirect('/login');
-  } catch (error) {
-      console.error('Error reigstering user:', error);
-      res.redirect('/register')
-  };
-})
+  //defining the query statement
+  var query = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`;
+  
+	await db.none(query, [username, email, hash])
+		.then(data => {
+			console.log('User registered successfully');
+			res.redirect('/login');
+		})
+		.catch(err => {
+			console.error('Error:', err);
+			res.render('./pages/register', {
+				message: 'Username is already in use. Please try another.',
+			});
+		});	
+});
 
 app.get('/profile', (req,res) => {
   res.render('./pages/profile');
