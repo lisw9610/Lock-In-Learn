@@ -143,6 +143,8 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
+app.get('/')
+
 // app.post('/login', await (req,res) => {
 
 // })
