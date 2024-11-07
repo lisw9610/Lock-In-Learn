@@ -25,6 +25,22 @@
             </div>
         </div>
     </div>
+    <div class="notification-settings">
+            <h2>Notification Preferences</h2>
+            <form id="notification-form">
+                <label for="notification-method">Preferred Method:</label>
+                <select id="notification-method" name="method">
+                    <option value="email">Email</option>
+                    <option value="sms">SMS</option>
+                    <option value="push">Push Notifications</option>
+                </select>
+
+                <label for="notification-time">Preferred Time:</label>
+                <input type="time" id="notification-time" name="time">
+
+                <button type="submit">Save Preferences</button>
+            </form>
+        </div>
 </body>
 </html>
 
