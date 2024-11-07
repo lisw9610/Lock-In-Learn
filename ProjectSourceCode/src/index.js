@@ -150,6 +150,13 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
+app.post('/profile', async(req, res) => {
+  // const username = req.body.username;
+  // const email = req.body.email;
+  // var profile_url = req.profilePicture;
+  
+})
+
 app.get('/')
 
 // app.post('/login', await (req,res) => {
