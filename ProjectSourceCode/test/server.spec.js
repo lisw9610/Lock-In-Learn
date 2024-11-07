@@ -1,6 +1,6 @@
 // ********************** Initialize server **********************************
 
-const server = require('../index'); //TODO: Make sure the path to your index.js is correctly added
+const server = require('../src/index'); //TODO: Make sure the path to your index.js is correctly added
 
 // ********************** Import Libraries ***********************************
 
@@ -51,7 +51,7 @@ describe('Test registering a user API', () => {
       .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(409);
-        expect(res.body.message).to.equals('Username is already in use. Please try another');
+        expect(res.body.message).to.equals('Username is already in use. Please try another.');
         done();
       });
   });
