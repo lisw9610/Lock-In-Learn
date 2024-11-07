@@ -30,3 +30,19 @@ describe('Server!', () => {
 // *********************** TODO: WRITE 2 UNIT TESTCASES **************************
 
 // ********************************************************************************
+
+// Adding a user
+describe('Test registering a user API', () => {
+  it('positive : /register (post)', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({username: 'test_name', password: 'random', email: 'random@email.com'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.equals('success');
+        // assert.strictEqual(res.body.message, 'Welcome!');
+        done();
+      });
+  });
+});

@@ -136,13 +136,25 @@ app.post('/register', async (req, res) => {
 	await db.none(query, [username, email, hash])
 		.then(data => {
 			console.log('User registered successfully');
-			res.redirect('/login');
+      res.json({
+        status: 'success', 
+        message: 'successfully registered a new user'})
+			// res.redirect('/login');
 		})
 		.catch(err => {
 			console.error('Error:', err);
-			res.render('./pages/register', {
-				message: 'Username is already in use. Please try another.',
-			});
+
+      if(err.code === '23505') {
+        res.status(409).json({
+          status: 'error',
+          message: 'Username is already in use. Please try another.'
+        });
+      } else {
+        res.status(500).json({
+          status: 'error',
+          message: 'An error ocurred during registration. Please try again later.'
+        });
+      }
 		});	
 });
 
@@ -150,12 +162,13 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
-app.get('/')
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
 
 // app.post('/login', await (req,res) => {
 
 // })
 
-// app.listen(3000);
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
