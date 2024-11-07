@@ -150,11 +150,13 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
-app.get('/')
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
 
 // app.post('/login', await (req,res) => {
 
 // })
 
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
