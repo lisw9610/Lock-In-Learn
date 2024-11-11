@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Calendar</title>
+  <!-- @TODO: Include all external resources - Bootstrap libraries, script.js and style.css -->
+  <!-- Bootstrap CSS library -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <!-- Bootstrap JS library -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <!-- Bootstrap icons library -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+
+  <!-- Replace file.js with the appropriate path to script.js. Please use relative paths -->
+  <script src="./resources/js/script.js"></script>
+
+  <!-- Replace file.css with the appropriate path to style.css. Please use relative paths -->
+  <link rel="stylesheet" href="./resources/css/style.css" />
+
+</head>
+
+<!-- Replace myFunction() with initializeCalendar() -->
+
+<body onload="initializeCalendar()">
+  <!-- Calendar elements -->
+  <div class="container">
+    <!-- You may choose another container class of your liking -->
+    <!-- All elements of the webpage will be added within this div -->
+    <div id="calendar" class="row"></div>
+  </div>
+
+
+
+  <!-- Modal elements -->
+  <div class="modal" tabindex="-1" id="event-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Event</h5>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="event_name" class="form-label">Event Name</label>
+              <input type="text" class="form-control" id="event_name" placeholder="Enter Event Name" required>
+            </div>
+            <div class="mb-3">
+              <label for="event_weekday" class="form-label">Weekday</label>
+              <select class="form-select" id="event_weekday" required>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="event_time" class="form-label">Time</label>
+              <input type="time" class="form-control" id="event_time" placeholder="Enter Event Name" required>
+            </div>
+            <div class="mb-3">
+              <label for="event_modality" class="form-label">Modality</label>
+              <!-- "this.value" passed to updateLocationOptions() refers to the text in the "value" attribute
+                  of the option that is chosen by the user -->
+              <select class="form-select" id="event_modality" onchange="updateLocationOptions(this.value)" required>
+                <option value="in-person" default>In Person</option>
+                <option value="remote">Remote</option>
+              </select>
+            </div>
+            <div id = "in-person" class="mb-3">
+              <label for="event_location" class="form-label">Location</label>
+              <input type="text" class="form-control" id="event_location" placeholder="Enter Event Location" required>
+            </div>
+            <div id="remote" style="display:none;" class="mb-3">
+              <label for="event_remote_url" class="form-label">Remote URL </label>
+              <input type="text" class="form-control" id="event_remote_url" placeholder="Enter Remote URL"
+              pattern="https?://.+" />
+            </div>
+
+
+            <div class="mb-3">
+              <label for="event_attendees" class="form-label">Attendees</label>
+              <input type="text" class="form-control" id="event_attendees" placeholder="Enter Attendees" required>
+            </div>
+            <div>
+              <div class="modal-footer">
+  
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="submit_button" class="btn btn-primary" type="submit" onclick = "updateEventFromModal(id)">
+                  Create Event
+                </button>
+              </div>
+  
+          </form>
+          <div>
+          </div>
+        </div>
+      </div>
+</body>
+
+</html>
