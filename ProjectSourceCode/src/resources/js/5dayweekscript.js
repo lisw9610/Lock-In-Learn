@@ -11,7 +11,7 @@ const CALENDAR_EVENTS = [
     },
   ];
   
-  //updated to only include weekdays
+  //made changes to fit 5 day week
   const CALENDAR_DAYS = [
     'Monday',
     'Tuesday',
