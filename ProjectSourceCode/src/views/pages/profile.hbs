@@ -33,8 +33,19 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="notification-time">Preferred Time:</label>
+                        <label for="notification-time">Preferred Time For Weekly Reminder:</label>
                         <input type="time" id="notification-time" name="time">
+                    </div>
+                    <div class="form-group">
+                        <label for="assignment-reminder">Assignment/Event Reminder:</label>
+                        <select id="assignment-reminder" name="assignmentReminder">
+                            <option value="24-hours">24 hours before</option>
+                            <option value="12-hours">12 hours before</option>
+                            <option value="6-hours">6 hours before</option>
+                            <option value="4-hours">4 hours before</option>
+                            <option value="2-hours">2 hours before</option>
+                            <option value="1-hour">1 hour before</option>
+                        </select>
                     </div>
                     <button type="submit">Save Preferences</button>
                 </form>
