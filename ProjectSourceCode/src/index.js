@@ -113,10 +113,10 @@ app.post('/login', (req, res) => {
 		} else {
 			res.status(400).json({
 				status: 'error',
-				message: 'Incorrect username or password.'
+				message: 'Incorrect password.'
 			});
 			res.render('./pages/login', { 
-				message: `Incorrect username or password.`, 
+				message: `Incorrect password.`, 
 			});
 			
 		}
@@ -148,9 +148,10 @@ app.post('/register', async (req, res) => {
 	await db.none(query, [username, email, hash])
 		.then(data => {
 			console.log('User registered successfully');
-      res.status(200).json({
-        status: 'success', 
-        message: 'successfully registered a new user'})
+			res.status(200).json({
+				status: 'success', 
+				message: 'successfully registered a new user'
+			})
 			// res.redirect('/login');
 		})
 		.catch(err => {
@@ -164,7 +165,7 @@ app.post('/register', async (req, res) => {
       } else {
         res.status(500).json({
           status: 'error',
-          message: 'An error ocurred during registration. Please try again later.'
+          message: 'An error ocurred during registration. Please try again.'
         });
       }
 		});	

@@ -111,7 +111,7 @@ describe('Log In Route Tests', () => {
 		  .send({username: 'testuser', password: 'password123'})
 		  .end((err, res) => {
 			expect(res).to.have.status(400);
-			expect(res.body.message).to.equals('Incorrect username or password.');
+			expect(res.body.message).to.equals('Incorrect password.');
 			done();
 		  });
 	  });

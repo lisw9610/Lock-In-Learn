@@ -16,7 +16,7 @@ CREATE TABLE private_info (
     age INT,
     dob DATE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-)
+);
 
 CREATE TABLE assignments (
     task_id SERIAL PRIMARY KEY NOT NULL,
