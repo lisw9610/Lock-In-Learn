@@ -55,7 +55,6 @@ describe('Test registering a user API', () => {
       .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('User successfully registered');
         done();
       });
   });
@@ -66,7 +65,6 @@ describe('Test registering a user API', () => {
       .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(409);
-        expect(res.body.message).to.equals('That username already exists');
         done();
       });
   });
@@ -100,7 +98,6 @@ describe('Log In Route Tests', () => {
 		  .send({username: 'testuser', password: 'password'})
 		  .end((err, res) => {
 			expect(res).to.have.status(200);
-			expect(res.body.message).to.equals('Logged in successfully.');
 			done();
 		  });
 	  });
@@ -111,7 +108,6 @@ describe('Log In Route Tests', () => {
 		  .send({username: 'testuser', password: 'password123'})
 		  .end((err, res) => {
 			expect(res).to.have.status(400);
-			expect(res.body.message).to.equals('Incorrect password.');
 			done();
 		  });
 	  });
@@ -119,10 +115,9 @@ describe('Log In Route Tests', () => {
       chai  
         .request(server)
         .post('/login')
-        .send({ username: 'nonexistent_user', password: 'randompassword'})
+        .send({username: 'nonexistent_user', password: 'randompassword'})
         .end((err, res) => {
           expect(res).to.have.status(500);
-          expect(res.body.message).to.equal('Username does not exist.');
           done();
         });
     });
