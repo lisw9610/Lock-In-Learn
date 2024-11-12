@@ -1,0 +1,14 @@
+November 12th, 2024
+- What we did last week
+  - users can now login once they have created their account
+  - graphics have been added to the registration page for aesthetics
+  - completed UAT plan
+- our feature demo included a demo of a working registration page along with options for a user to make notification preferences
+- To do: link calendars and do some user-testing on calendar
+
+
+November 5th, 2024 (1:45pm-2:00pm)
+-Worked on login and registration page skeletons. Created project directory structure and set up required docker files.
+-Showed our login page graphics and that our docker container is able to be ran properly.
+-By next week, we hope to have completed a skeleton for all of our expected pages and have user registration, login, and profiles functional.
+
