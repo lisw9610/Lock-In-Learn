@@ -83,6 +83,10 @@ const user = {
 };
 
 
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
 app.get('/', (req,res) => {
   res.redirect('/login');
 })
@@ -109,18 +113,14 @@ app.post('/login', (req, res) => {
 			req.session.user = user;
 			req.session.save();
 			
-			res.status(200).json({
+			res.status(200).render('./pages/login', {
 				status: 'success',
 				message: 'Logged in successfully.'
 			});
 			
 		} else {
-			res.status(400).json({
-				status: 'error',
+			res.status(400).render('./pages/login', {
 				message: 'Incorrect password.'
-			});
-			res.render('./pages/login', { 
-				message: `Incorrect password.`, 
 			});
 			
 		}
@@ -128,9 +128,8 @@ app.post('/login', (req, res) => {
     .catch(err => {
 		console.error(`Error:`, err);
 		
-		res.status(500).json({
-				status: 'error',
-				message: 'Username does not exist.'
+		res.status(500).render('./pages/login', {
+				message: 'Username does not exist.',
 	    });
 			
     });
@@ -152,40 +151,44 @@ app.post('/register', async (req, res) => {
 	await db.none(query, [username, email, hash])
 		.then(data => {
 			console.log('User registered successfully');
-			res.status(200).json({
-				status: 'success', 
-				message: 'successfully registered a new user'
-			})
-			// res.redirect('/login');
+			res.status(200).render('./pages/login', {
+				message: 'User successfully registered',
+		    });
 		})
 		.catch(err => {
 			console.error('Error');
 
       if(err.code === '23505') {
-        res.status(409).json({
-          status: 'error',
-          message: 'Username is already in use. Please try another.'
-        });
+		res.status(409).render('./pages/register', {
+				message: 'That username already exists',
+		});
       } else {
-        res.status(500).json({
-          status: 'error',
-          message: 'An error ocurred during registration. Please try again.'
-        });
+		res.status(500).render('./pages/register', {
+				message: 'An error occured during registration. Please try again.',
+		});
       }
 		});	
 });
 
+// --------------------------------------------------------------
+// Anything that requires a user to be logged in goes below here
+// --------------------------------------------------------------
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
 app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
-
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
-});
-
-// app.post('/login', await (req,res) => {
-
-// })
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
