@@ -8,9 +8,11 @@
   - Graphics have been added to the registration for aesthetics.
 
 ## Known Issues
-- **Change Password**: Currently, there is no way for the user to change their password once their account has been created.
+- **Change Password**:
+  - Currently, there is no way for the user to change their password once their account has been created.
 
-- **Log Private Information**: There is no option log private information such as grade, age, and date of birth.
+- **Log Private Information**:
+  - There is no option log private information such as grade, age, and date of birth.
 
 
 
