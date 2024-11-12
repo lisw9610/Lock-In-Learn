@@ -126,7 +126,7 @@ app.post('/login', (req, res) => {
 		
 		res.status(500).json({
 				status: 'error',
-				message: 'Invalid username input.'
+				message: 'Username does not exist.'
 	    });
 			
     });
@@ -154,7 +154,7 @@ app.post('/register', async (req, res) => {
 			// res.redirect('/login');
 		})
 		.catch(err => {
-			console.error('Error:', err);
+			console.error('Error');
 
       if(err.code === '23505') {
         res.status(409).json({

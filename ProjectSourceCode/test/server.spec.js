@@ -76,18 +76,16 @@ describe('Test registering a user API', () => {
 describe('Log In Route Tests', () => {
   const testUser = {
     username: 'testuser',
-	email: 'email@gmail.com',
+	  email: 'email@gmail.com',
     password: 'password',
   };
 
-
-   before(async () => {
+  before(async () => {
     // Clear users table and create test user
     await db.query('TRUNCATE TABLE users CASCADE');
     const hashedPassword = await bcrypt.hash(testUser.password, 10);
     await db.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [testUser.username, testUser.email, hashedPassword]);
   });
-	
 	
   after(async () => {
     // Clean up database
@@ -117,5 +115,17 @@ describe('Log In Route Tests', () => {
 			done();
 		  });
 	  });
+    it('Negative : /login. Checking non-existent username', done => {
+      chai  
+        .request(server)
+        .post('/login')
+        .send({ username: 'nonexistent_user', password: 'randompassword'})
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body.message).to.equal('Username does not exist.');
+          done();
+        });
+    });
+
 	});
 });
