@@ -13,8 +13,6 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
-// const multer = require('multer');
-// const upload = multer({ dest: 'uploads/' }); // Directory where files will be saved
 
 
 // *****************************************************
@@ -179,13 +177,18 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
+app.post('/register', async (req, res) => {
+  //get the information posted by the register form
+  const fileInput = document.getElementById('input');
+fileInput.onchange = () => {
+  const selectedFile = fileInput.files[0];
+  console.log(selectedFile);
+}
+});
+
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
 });
-
-// app.post('/login', await (req,res) => {
-
-// })
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');

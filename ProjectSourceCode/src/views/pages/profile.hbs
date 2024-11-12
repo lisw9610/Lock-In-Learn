@@ -7,25 +7,24 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="profile-container">
-        <div>
-            <h1>User Profile</h1>
+    
+     <div class="profile-container">
+       <div>
+           <h1>User Profile</h1>
 
-            <div class="profile-card">
-                <div class="profile-picture">
-                    <img src="{{#if profilePictureUrl}}{{profilePictureUrl}}{{else}}/images/default-profile.png{{/if}}" alt="Profile Picture" width="150" height="150">
-                    <form action="/profile/upload" method="POST" enctype="multipart/form-data">
-                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display: none;">
-                        <button type="button" id="uploadButton">Upload Picture</button>
-                        <button type="submit" id="submitButton" style="display: none;">Submit</button>
-                    </form>
-                </div>
 
-                <div class="profile-details">
-                    <p><strong>Username:</strong> {{username}}</p>
-                    <p><strong>Email:</strong> {{email}}</p>
-                </div>
-            </div>
+           <div class="profile-card">
+               <div class="profile-picture">
+                    <!-- Display Profile Picture -->
+                       <img src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" alt="Profile Picture" class="profile-picture" id="profile-picture">
+
+
+                       <div class="profile-details">
+                           <p><strong>Username:</strong> {{username}}</p>
+                           <p><strong>Email:</strong> {{email}}</p>
+                       </div>
+               </div>
+           </div>
 
             <div class="notification-preferences">
                 <h2>Notification Preferences</h2>
@@ -58,18 +57,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const uploadButton = document.getElementById('uploadButton');
-        const profilePictureInput = document.getElementById('profilePictureInput');
-        const submitButton = document.getElementById('submitButton');
-
-        uploadButton.addEventListener('click', () => {
-            profilePictureInput.style.display = 'block';
-            submitButton.style.display = 'inline-block';
-            uploadButton.style.display = 'none';
-        });
-    </script>
 </body>
 </html>
 
@@ -115,32 +102,22 @@
         border-radius: 4px;
     }
 
-    #uploadButton {
-        padding: 5px 10px;
-        border: none;
-        border-radius: 4px;
-        background-color: #4CAF50;
-        color: white;
+    .image-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+    }
+
+    .selectable-image {
         cursor: pointer;
-        font-size: 14px;
+        border: 2px solid transparent;
+        border-radius: 50%;
     }
 
-    #uploadButton:hover {
-        background-color: #45a049;
+    .selectable-image:hover,
+    .selectable-image.selected {
+        border-color: #4CAF50;
     }
 
-    #submitButton {
-        padding: 5px 10px;
-        border: none;
-        border-radius: 4px;
-        background-color: #4CAF50;
-        color: white;
-        cursor: pointer;
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    #submitButton:hover {
-        background-color: #45a049;
-    }
 </style>
