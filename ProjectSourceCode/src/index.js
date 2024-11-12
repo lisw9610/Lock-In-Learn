@@ -152,25 +152,24 @@ app.post('/register', async (req, res) => {
 	await db.none(query, [username, email, hash])
 		.then(data => {
 			console.log('User registered successfully');
-			res.status(200).json({
-				status: 'success', 
-				message: 'successfully registered a new user'
-			})
-			// res.redirect('/login');
+			res.status(200);
+			res.render('./pages/login', {
+				message: 'User successfully registered',
+		    });
 		})
 		.catch(err => {
 			console.error('Error');
 
       if(err.code === '23505') {
-        res.status(409).json({
-          status: 'error',
-          message: 'Username is already in use. Please try another.'
-        });
+		res.status(409);
+        res.render('./pages/register', {
+				message: 'That username already exists',
+		});
       } else {
-        res.status(500).json({
-          status: 'error',
-          message: 'An error ocurred during registration. Please try again.'
-        });
+		res.status(500);
+        res.render('./pages/register', {
+				message: 'An error occured during registration. Please try again.',
+		});
       }
 		});	
 });

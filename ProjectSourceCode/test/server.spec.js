@@ -55,7 +55,7 @@ describe('Test registering a user API', () => {
       .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.message).to.equals('successfully registered a new user');
+        expect(res.body.message).to.equals('User successfully registered');
         done();
       });
   });
@@ -66,7 +66,7 @@ describe('Test registering a user API', () => {
       .send({username: 'test_name', email: 'random@email.com', password: 'random'})
       .end((err, res) => {
         expect(res).to.have.status(409);
-        expect(res.body.message).to.equals('Username is already in use. Please try another.');
+        expect(res.body.message).to.equals('That username already exists');
         done();
       });
   });
