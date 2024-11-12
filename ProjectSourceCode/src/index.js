@@ -13,6 +13,10 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' }); // Directory where files will be saved
+
+
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
