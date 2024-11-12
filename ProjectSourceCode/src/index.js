@@ -73,6 +73,11 @@ app.use(
 // *****************************************************
 // <!-- Section 4 : API Routes -->
 // *****************************************************
+const user = {
+  username: undefined,
+  password: undefined
+};
+
 
 app.get('/', (req,res) => {
   res.redirect('/login');
@@ -94,7 +99,7 @@ app.post('/login', (req, res) => {
 		// check if password from request matches with password in DB
 		const match = await bcrypt.compare(req.body.password, user.password);
 		
-		if(match) {
+		if(user && match) {
 			user.username = username;
 
 			req.session.user = user;
@@ -105,14 +110,13 @@ app.post('/login', (req, res) => {
 				message: 'Logged in successfully.'
 			});
 			
-			res.redirect('/discover');
 		} else {
 			res.status(400).json({
 				status: 'error',
 				message: 'Incorrect username or password.'
 			});
 			res.render('./pages/login', { 
-				message: `Incorrect password.`, 
+				message: `Incorrect username or password.`, 
 			});
 			
 		}
@@ -122,10 +126,9 @@ app.post('/login', (req, res) => {
 		
 		res.status(500).json({
 				status: 'error',
-				message: 'Username does not exist.'
+				message: 'Invalid username input.'
 	    });
 			
-		res.redirect('/register');
     });
 });
 

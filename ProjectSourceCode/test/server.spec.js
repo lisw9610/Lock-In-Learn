@@ -10,6 +10,21 @@ chai.should();
 chai.use(chaiHttp);
 const {assert, expect} = chai;
 
+const pgp = require('pg-promise')();
+const bcrypt = require('bcryptjs'); //  To hash passwords
+
+
+// database configuration
+const dbConfig = {
+  host: 'db', // the database server
+  port: 5432, // the database port
+  database: process.env.POSTGRES_DB, // the database name
+  user: process.env.POSTGRES_USER, // the user account to connect with
+  password: process.env.POSTGRES_PASSWORD, // the password of the user account
+};
+
+const db = pgp(dbConfig);
+
 // ********************** DEFAULT WELCOME TESTCASE ****************************
 
 describe('Server!', () => {
@@ -57,4 +72,50 @@ describe('Test registering a user API', () => {
   });
 });
 
+// Logging in User
+describe('Log In Route Tests', () => {
+  const testUser = {
+    username: 'testuser',
+	email: 'email@gmail.com',
+    password: 'password',
+  };
 
+
+   before(async () => {
+    // Clear users table and create test user
+    await db.query('TRUNCATE TABLE users CASCADE');
+    const hashedPassword = await bcrypt.hash(testUser.password, 10);
+    await db.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [testUser.username, testUser.email, hashedPassword]);
+  });
+	
+	
+  after(async () => {
+    // Clean up database
+    await db.query('TRUNCATE TABLE users CASCADE');
+  });
+
+	describe('Test log in API', () => {	
+	  it('positive : /login (post)', done => {
+		chai
+		  .request(server)
+		  .post('/login')
+		  .send({username: 'testuser', password: 'password'})
+		  .end((err, res) => {
+			expect(res).to.have.status(200);
+			expect(res.body.message).to.equals('Logged in successfully.');
+			done();
+		  });
+	  });
+	  it('Negative : /login. Checking invalid name or password', done => {
+		chai
+		  .request(server)
+		  .post('/login')
+		  .send({username: 'testuser', password: 'password123'})
+		  .end((err, res) => {
+			expect(res).to.have.status(400);
+			expect(res.body.message).to.equals('Incorrect username or password.');
+			done();
+		  });
+	  });
+	});
+});
