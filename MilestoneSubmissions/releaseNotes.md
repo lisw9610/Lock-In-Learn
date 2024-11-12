@@ -1,4 +1,19 @@
 # Release Notes for Lock-In Learn v1.0.0
+**Release Date: 2024-11-12**
+## New Features
+- **Calendar Viewing Preference**:
+  - Created multiple views for users (5 day week or 7 day week) based on their preference.
+
+- **Login/logout**:
+  - Users can login and logout of their account once they have created an account.
+
+## Known Issues
+- **Change Password**: Currently, there is no way for the user to change their password once their account has been created.
+
+- **Log Private Information**: There is no option log private information such as grade, age, and date of birth. 
+
+
+
 **Release Date: 2024-11-05**
 
 ## New Features
