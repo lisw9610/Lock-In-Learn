@@ -196,12 +196,16 @@ app.post('/save-preferences', async (req, res) => {
     const query = `
       INSERT INTO notification_preferences (user_id, method, time, assignment_reminder)
       VALUES ($1, $2, $3, $4)
+      ON CONFLICT (user_id) DO UPDATE
+      SET method = EXCLUDED.method,
+          time = EXCLUDED.time,
+          assignment_reminder = EXCLUDED.assignment_reminder
       RETURNING *;
     `;
     const values = [user_id, method, time, assignmentReminder];
     const result = await pool.query(query, values);
 
-    res.send('Preferences saved successfully!');
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     console.error('Error saving preferences:', err);
     res.status(500).send('Error saving preferences');
