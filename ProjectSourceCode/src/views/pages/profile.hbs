@@ -8,26 +8,26 @@
 </head>
 <body>
     
-     <div class="profile-container">
-       <div>
-           <h1>User Profile</h1>
+    <div class="profile-container">
+        <div>
+            <h1>User Profile</h1>
 
-
-           <div class="profile-card">
-               <div class="profile-picture">
+            <div class="profile-card">
+                <div class="profile-picture">
                     <!-- Display Profile Picture -->
-                       <img src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" alt="Profile Picture" class="profile-picture" id="profile-picture">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture" id="profile-picture">
 
-                       <div class="profile-details">
-                           <p><strong>Username:</strong> {{username}}</p>
-                           <p><strong>Email:</strong> {{email}}</p>
-                       </div>
-               </div>
-           </div>
+                    <div class="profile-details">
+                        <p><strong>Username:</strong> {{username}}</p>
+                        <p><strong>Email:</strong> {{email}}</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="notification-preferences">
                 <h2>Notification Preferences</h2>
                 <form id="notification-form">
+                    <input type="hidden" name="user_id" value="1"> <!-- Replace with actual user ID -->
                     <div class="form-group">
                         <label for="notification-method">Preferred Method:</label>
                         <select id="notification-method" name="method">
@@ -56,6 +56,34 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('notification-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/save-preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Preferences saved successfully!');
+                } else {
+                    alert('Error saving preferences');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving preferences');
+            }
+        });
+    </script>
 </body>
 </html>
 
