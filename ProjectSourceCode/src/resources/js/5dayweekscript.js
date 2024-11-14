@@ -149,10 +149,10 @@ const CALENDAR_EVENTS = [
   }
   
   //input which users can fill in or update
-    <div class="form-group">
+   /* <div class="form-group">
         <label for="event_course_link">Course Link</label>
         <input type="url" id="event_course_link" className="form-control" placeholder="Enter course link (optional)" />
-    </div>
+    </div> */
 
   
   /********************** PART B: 6.3: UPDATE DOM ******************************/
