@@ -214,3 +214,12 @@ app.get('/7dayweek', (req,res) => {
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
+
+//get request for 5dayweek view and 7dayweek view
+app.get('/5dayweek', (req,res) => {
+  res.render('./layouts/5dayweek');
+})
+
+app.get('/7dayweek', (req,res) => {
+  res.render('./layouts/7dayweek');
+})
