@@ -95,47 +95,52 @@ app.get('/login', (req,res) => {
 })
 
 app.post('/login', (req, res) => {
-	const username = req.body.username;
-	console.log(`Querying for username: ${username}`);
-	const query = 'SELECT password, email FROM users WHERE users.username = $1 LIMIT 1';
-
+  const username = req.body.username;
+  console.log(`Querying for username: ${username}`);
+  const query = 'SELECT password, email, profile_picture FROM users WHERE username = $1 LIMIT 1';
+ 
+ 
   // get the student_id based on the emailid
   db.one(query, [username])
     .then(async data => {
-		user.password = data.password;
-		// check if password from request matches with password in DB
-		const match = await bcrypt.compare(req.body.password, user.password);
-		
-		if(user && match) {
-			user.username = username;
-			user.email = data.email;
-
-			req.session.user = user;
-			req.session.save();
-			
-			res.status(200).render('./pages/profile', {
-				status: 'success',
-				message: 'Logged in successfully.',
-				username: user.username,
-				email: user.email
-			});
-			
-		} else {
-			res.status(400).render('./pages/login', {
-				message: 'Incorrect password.'
-			});
-			
-		}
+    user.password = data.password;
+    // check if password from request matches with password in DB
+    const match = await bcrypt.compare(req.body.password, user.password);
+   
+    if(user && match) {
+      user.username = username;
+      user.email = data.email;
+      user.profile_picture = data.profile_picture;
+ 
+ 
+      req.session.user = user;
+      req.session.save();
+     
+      res.status(200).render('./pages/profile', {
+        status: 'success',
+        message: 'Logged in successfully.',
+        username: user.username,
+        email: user.email,
+        profile_picture: data.profile_picture
+      });
+     
+    } else {
+      res.status(400).render('./pages/login', {
+        message: 'Incorrect password.'
+      });
+     
+    }
     })
     .catch(err => {
-		console.error(`Error:`, err);
-		
-		res.status(500).render('./pages/login', {
-				message: 'Username does not exist.',
-	    });
-			
+    console.error(`Error:`, err);
+   
+    res.status(500).render('./pages/login', {
+        message: 'Username does not exist.',
+      });
+     
     });
-});
+ });
+ 
 
 app.get('/register', (req,res) => {
   res.render('./pages/register');
@@ -174,6 +179,22 @@ app.post('/register', async (req, res) => {
 		});	
 });
 
+app.post('/update-profile-picture', (req, res) => {
+  const userId = req.session.user.username;  // Retrieve user ID or username from session
+  const profilePictureUrl = req.body.profilePictureUrl;
+
+  const query = 'UPDATE users SET profile_picture = $1 WHERE username = $2';
+  db.none(query, [profilePictureUrl, userId])
+      .then(() => {
+          // Update session data with the new profile picture
+          req.session.user.profile_picture = profilePictureUrl;
+          res.json({ success: true });
+      })
+      .catch(error => {
+          console.error("Failed to update profile picture:", error);
+          res.json({ success: false });
+      });
+});
 
 // --------------------------------------------------------------
 // Anything that requires a user to be logged in goes below here
@@ -191,12 +212,13 @@ const auth = (req, res, next) => {
 // Authentication Required
 app.use(auth);
 
-app.get('/profile', (req,res) => {
+app.get('/profile', (req, res) => {
   res.render('./pages/profile', {
     username: req.session.user.username,
-    email: req.session.user.email
+    email: req.session.user.email,
+    profile_picture: req.session.user.profile_picture
   });
-})
+});
 
 app.get('/logout', (req, res) => {
 	console.log(`logged user out`);

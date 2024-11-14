@@ -4,10 +4,11 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
 
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(250) UNIQUE NOT NULL
+   user_id SERIAL PRIMARY KEY NOT NULL,
+   username VARCHAR(50) UNIQUE NOT NULL,
+   password VARCHAR(255) NOT NULL,
+   email VARCHAR(250) UNIQUE NOT NULL,
+   profile_picture TEXT
 );
 
 CREATE TABLE private_info (

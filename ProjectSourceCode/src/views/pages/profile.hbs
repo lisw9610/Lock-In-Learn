@@ -1,114 +1,223 @@
 {{> header}}
 <body>
-     {{> message}}
-     <div class="profile-container">
-       <div>
-           <h1>User Profile</h1>
+    {{> message}}
+    <div class="profile-container">
+      <div>
+       <h1>User Profile</h1>
+       <div class="profile-card">
+          <div class="profile-picture">
+               <img src="{{profile_picture}}"
+                   alt="Profile Picture"
+                   class="profile-picture"
+                   id="profile-picture">
+              
+               <!-- edit button -->
+               <button id="edit-picture-button">Edit Profile Picture</button>
 
 
-           <div class="profile-card">
-               <div class="profile-picture">
-                    <!-- Display Profile Picture -->
-                       <img src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" alt="Profile Picture" class="profile-picture" id="profile-picture">
-
-
-                       <div class="profile-details">
-                           <p><strong>Username:</strong> {{username}}</p>
-                           <p><strong>Email:</strong> {{email}}</p>
-                       </div>
+               <div class="profile-details">
+                   <p><strong>Username:</strong> {{username}}</p>
+                   <p><strong>Email:</strong> {{email}}</p>
                </div>
            </div>
 
-            <div class="notification-preferences">
-                <h2>Notification Preferences</h2>
-                <form id="notification-form">
-                    <div class="form-group">
-                        <label for="notification-method">Preferred Method:</label>
-                        <select id="notification-method" name="method">
-                            <option value="email">Email</option>
-                            <option value="sms">SMS</option>
-                            <option value="push">Push Notifications</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="notification-time">Preferred Time For Weekly Reminder:</label>
-                        <input type="time" id="notification-time" name="time">
-                    </div>
-                    <div class="form-group">
-                        <label for="assignment-reminder">Assignment/Event Reminder:</label>
-                        <select id="assignment-reminder" name="assignmentReminder">
-                            <option value="24-hours">24 hours before</option>
-                            <option value="12-hours">12 hours before</option>
-                            <option value="6-hours">6 hours before</option>
-                            <option value="4-hours">4 hours before</option>
-                            <option value="2-hours">2 hours before</option>
-                            <option value="1-hour">1 hour before</option>
-                        </select>
-                    </div>
-                    <button type="submit">Save Preferences</button>
-                </form>
-            </div>
-        </div>
-    </div>
+
+           <!-- profile picture options -->
+           <div class="image-options" id="image-options" style="display: none;">
+               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHPwOI4BDaXyNZ5x-bhPpoF0VMhp-z4ESViA&s" class="selectable-image" alt="Option 1">
+               <img src="https://media.istockphoto.com/id/836368030/vector/bookworm-cartoon-illustration.jpg?s=612x612&w=0&k=20&c=Cbl3nnfVGVEvmAs7DCl8kQrKAquGgj3MABVIPTxkcYc=" class="selectable-image" alt="Option 2">
+               <img src="https://media.istockphoto.com/id/506670795/vector/red-apple.jpg?s=612x612&w=0&k=20&c=lF9vQ-kQPv3StsSFND4Okt1yqEO86q2XWFECgn0AqWU=" class="selectable-image" alt="Option 3">
+               <img src="https://i0.wp.com/afro.com/wp-content/uploads/2021/11/Computer-clipart.jpg?fit=490%2C519&ssl=1" class="selectable-image" class="selectable-image" alt="Option 4">
+
+
+               <button id="save-picture-button">Save</button>
+
+           </div>
+       </div>
+   </div>
+
+
+           <div class="notification-preferences">
+               <h2>Notification Preferences</h2>
+               <form id="notification-form">
+                   <div class="form-group">
+                       <label for="notification-method">Preferred Method:</label>
+                       <select id="notification-method" name="method">
+                           <option value="email">Email</option>
+                           <option value="sms">SMS</option>
+                           <option value="push">Push Notifications</option>
+                       </select>
+                   </div>
+                   <div class="form-group">
+                       <label for="notification-time">Preferred Time For Weekly Reminder:</label>
+                       <input type="time" id="notification-time" name="time">
+                   </div>
+                   <div class="form-group">
+                       <label for="assignment-reminder">Assignment/Event Reminder:</label>
+                       <select id="assignment-reminder" name="assignmentReminder">
+                           <option value="24-hours">24 hours before</option>
+                           <option value="12-hours">12 hours before</option>
+                           <option value="6-hours">6 hours before</option>
+                           <option value="4-hours">4 hours before</option>
+                           <option value="2-hours">2 hours before</option>
+                           <option value="1-hour">1 hour before</option>
+                       </select>
+                   </div>
+                   <button type="submit">Save Preferences</button>
+               </form>
+           </div>
+       </div>
+   </div>
+
+
+
+
+   <script>
+       document.getElementById('edit-picture-button').addEventListener('click', () => {
+           const imageOptions = document.getElementById('image-options');
+           imageOptions.style.display = imageOptions.style.display === 'none' ? 'flex' : 'none';
+       });
+
+
+       let selectedImageUrl = '';
+
+
+       // select profile picture
+       document.querySelectorAll('.selectable-image').forEach(image => {
+           image.addEventListener('click', () => {
+               selectedImageUrl = image.src;
+               document.getElementById('profile-picture').src = selectedImageUrl;
+           });
+       });
+
+
+       // save button
+       document.getElementById('save-picture-button').addEventListener('click', () => {
+           if (selectedImageUrl) {
+               fetch('/update-profile-picture', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({ profilePictureUrl: selectedImageUrl })
+               })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.success) {
+                       console.log("Profile picture updated successfully!");
+                       // hide images after saving
+                       document.getElementById('image-options').style.display = 'none';
+                   } else {
+                       console.error("Failed to update profile picture.");
+                   }
+               })
+               .catch(error => console.error("Error:", error));
+           }
+       });
+   </script>
+
+
+
 
 <style>
-    .profile-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        text-align: center;
-    }
+   .profile-container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       padding: 20px;
+       text-align: center;
+   }
 
-    .profile-card, .notification-preferences {
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 8px;
-        width: 300px;
-        background-color: #f9f9f9;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        margin-bottom: 20px;
-    }
+   .profile-card, .notification-preferences {
+       border: 1px solid #ccc;
+       padding: 20px;
+       border-radius: 8px;
+       width: 300px;
+       background-color: #f9f9f9;
+       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+       margin-bottom: 20px;
+   }
 
-    .profile-picture img {
-        border-radius: 50%;
-        margin-bottom: 15px;
-    }
 
-    .form-group {
-        margin-bottom: 15px;
-    }
+   /* profile picture size */
+   .profile-picture img {
+       width: 100px; 
+       height: 100px;
+       border-radius: 50%;
+       margin-bottom: 15px;
+   }
 
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
 
-    select, input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+   .form-group {
+       margin-bottom: 15px;
+   }
 
-    .image-options {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 10px;
-    }
 
-    .selectable-image {
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 50%;
-    }
+   label {
+       display: block;
+       margin-bottom: 5px;
+       font-weight: bold;
+   }
 
-    .selectable-image:hover,
-    .selectable-image.selected {
-        border-color: #4CAF50;
-    }
+
+   select, input {
+       width: 100%;
+       padding: 8px;
+       margin-bottom: 10px;
+       border: 1px solid #ccc;
+       border-radius: 4px;
+   }
+
+
+   .image-options {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   margin-top: 10px;
+   }
+
+
+   .selectable-image {
+       cursor: pointer;
+       border: 2px solid transparent;
+       border-radius: 50%;
+   }
+
+
+   .selectable-image:hover,
+   .selectable-image.selected {
+       border-color: #4CAF50;
+   }
+
+
+   #edit-picture-button {
+   margin-top: 10px;
+   padding: 5px 10px;
+   cursor: pointer;
+   }
+
+
+   .image-options {
+       display: flex;
+       gap: 10px;
+       justify-content: center;
+       margin-top: 10px;
+   }
+
+
+   .selectable-image {
+       width: 60px;
+       height: 60px;
+       cursor: pointer;
+       border: 2px solid transparent;
+       border-radius: 50%;
+       transition: border-color 0.3s;
+   }
+
+
+   .selectable-image:hover,
+   .selectable-image.selected {
+       border-color: #4CAF50;
+   }
 
 </style>
