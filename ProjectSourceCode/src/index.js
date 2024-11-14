@@ -220,6 +220,27 @@ app.get('/profile', (req, res) => {
   });
 });
 
+app.post('/delete-account', (req, res) => {
+  const userId = req.session.user.username;
+
+  const query = 'DELETE FROM users WHERE username = $1';
+  db.none(query, [userId])
+      .then(() => {
+          req.session.destroy(err => {
+              if (err) {
+                  console.error("Error destroying session:", err);
+                  return res.json({ success: false });
+              }
+              res.json({ success: true });
+          });
+      })
+      .catch(error => {
+          console.error("Failed to delete account:", error);
+          res.json({ success: false });
+      });
+});
+
+
 app.get('/logout', (req, res) => {
 	console.log(`logged user out`);
 	req.session.destroy();

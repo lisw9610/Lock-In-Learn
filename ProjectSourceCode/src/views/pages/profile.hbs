@@ -66,56 +66,75 @@
                    <button type="submit">Save Preferences</button>
                </form>
            </div>
+           <button id="delete-account-button">Delete Account</button>
        </div>
    </div>
 
 
 
 
-   <script>
-       document.getElementById('edit-picture-button').addEventListener('click', () => {
-           const imageOptions = document.getElementById('image-options');
-           imageOptions.style.display = imageOptions.style.display === 'none' ? 'flex' : 'none';
-       });
+<script>
+    // image options
+    document.getElementById('edit-picture-button').addEventListener('click', () => {
+        const imageOptions = document.getElementById('image-options');
+        imageOptions.style.display = imageOptions.style.display === 'none' ? 'flex' : 'none';
+    });
 
+    let selectedImageUrl = '';
 
-       let selectedImageUrl = '';
+    document.querySelectorAll('.selectable-image').forEach(image => {
+        image.addEventListener('click', () => {
+            selectedImageUrl = image.src;
+            document.getElementById('profile-picture').src = selectedImageUrl;
+        });
+    });
 
+    // save new profile pic
+    document.getElementById('save-picture-button').addEventListener('click', () => {
+        if (selectedImageUrl) {
+            fetch('/update-profile-picture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ profilePictureUrl: selectedImageUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Profile picture updated successfully!");
 
-       // select profile picture
-       document.querySelectorAll('.selectable-image').forEach(image => {
-           image.addEventListener('click', () => {
-               selectedImageUrl = image.src;
-               document.getElementById('profile-picture').src = selectedImageUrl;
-           });
-       });
+                    document.getElementById('image-options').style.display = 'none';
+                } else {
+                    console.error("Failed to update profile picture.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    });
 
-
-       // save button
-       document.getElementById('save-picture-button').addEventListener('click', () => {
-           if (selectedImageUrl) {
-               fetch('/update-profile-picture', {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify({ profilePictureUrl: selectedImageUrl })
-               })
-               .then(response => response.json())
-               .then(data => {
-                   if (data.success) {
-                       console.log("Profile picture updated successfully!");
-                       // hide images after saving
-                       document.getElementById('image-options').style.display = 'none';
-                   } else {
-                       console.error("Failed to update profile picture.");
-                   }
-               })
-               .catch(error => console.error("Error:", error));
-           }
-       });
-   </script>
-
+    // Delete account 
+    document.getElementById('delete-account-button').addEventListener('click', () => {
+        if (confirm("Are you sure you want to delete your account?")) {
+            fetch('/delete-account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Your account has been deleted.");
+                    window.location.href = '/login'; // redierct to login
+                } else {
+                    alert("There was an issue deleting your account.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    });
+</script>
 
 
 
@@ -138,7 +157,6 @@
        margin-bottom: 20px;
    }
 
-
    /* profile picture size */
    .profile-picture img {
        width: 100px; 
@@ -147,18 +165,15 @@
        margin-bottom: 15px;
    }
 
-
    .form-group {
        margin-bottom: 15px;
    }
-
 
    label {
        display: block;
        margin-bottom: 5px;
        font-weight: bold;
    }
-
 
    select, input {
        width: 100%;
@@ -167,7 +182,6 @@
        border: 1px solid #ccc;
        border-radius: 4px;
    }
-
 
    .image-options {
    display: flex;
@@ -183,12 +197,10 @@
        border-radius: 50%;
    }
 
-
    .selectable-image:hover,
    .selectable-image.selected {
        border-color: #4CAF50;
    }
-
 
    #edit-picture-button {
    margin-top: 10px;
@@ -196,14 +208,12 @@
    cursor: pointer;
    }
 
-
    .image-options {
        display: flex;
        gap: 10px;
        justify-content: center;
        margin-top: 10px;
    }
-
 
    .selectable-image {
        width: 60px;
@@ -214,10 +224,8 @@
        transition: border-color 0.3s;
    }
 
-
    .selectable-image:hover,
    .selectable-image.selected {
        border-color: #4CAF50;
    }
-
 </style>
