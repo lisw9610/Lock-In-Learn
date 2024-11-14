@@ -77,6 +77,7 @@ app.use(
 // *****************************************************
 const user = {
   username: undefined,
+  email: undefined,
   password: undefined
 };
 
@@ -96,7 +97,7 @@ app.get('/login', (req,res) => {
 app.post('/login', (req, res) => {
 	const username = req.body.username;
 	console.log(`Querying for username: ${username}`);
-	const query = 'SELECT password FROM users WHERE users.username = $1 LIMIT 1';
+	const query = 'SELECT password, email FROM users WHERE users.username = $1 LIMIT 1';
 
   // get the student_id based on the emailid
   db.one(query, [username])
@@ -107,13 +108,16 @@ app.post('/login', (req, res) => {
 		
 		if(user && match) {
 			user.username = username;
+			user.email = data.email;
 
 			req.session.user = user;
 			req.session.save();
 			
-			res.status(200).render('./pages/login', {
+			res.status(200).render('./pages/profile', {
 				status: 'success',
-				message: 'Logged in successfully.'
+				message: 'Logged in successfully.',
+				username: user.username,
+				email: user.email
 			});
 			
 		} else {
@@ -156,6 +160,8 @@ app.post('/register', async (req, res) => {
 		.catch(err => {
 			console.error('Error');
 
+      // res.render('/register');
+
       if(err.code === '23505') {
 		res.status(409).render('./pages/register', {
 				message: 'That username already exists',
@@ -167,6 +173,7 @@ app.post('/register', async (req, res) => {
       }
 		});	
 });
+
 
 // --------------------------------------------------------------
 // Anything that requires a user to be logged in goes below here
@@ -185,7 +192,24 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/profile', (req,res) => {
-  res.render('./pages/profile');
+  res.render('./pages/profile', {
+    username: req.session.user.username,
+    email: req.session.user.email
+  });
+})
+
+app.get('/logout', (req, res) => {
+	console.log(`logged user out`);
+	req.session.destroy();
+	res.render('pages/logout');
+});
+
+app.get('/5dayweek', (req,res) => {
+  res.render('./layouts/5dayweek');
+})
+
+app.get('/7dayweek', (req,res) => {
+  res.render('./layouts/7dayweek');
 })
 
 module.exports = app.listen(3000);
