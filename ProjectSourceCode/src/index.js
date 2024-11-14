@@ -188,5 +188,25 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
+// Endpoint to handle form submission
+app.post('/save-preferences', async (req, res) => {
+  const { user_id, method, time, assignmentReminder } = req.body;
+
+  try {
+    const query = `
+      INSERT INTO notification_preferences (user_id, method, time, assignment_reminder)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [user_id, method, time, assignmentReminder];
+    const result = await pool.query(query, values);
+
+    res.send('Preferences saved successfully!');
+  } catch (err) {
+    console.error('Error saving preferences:', err);
+    res.status(500).send('Error saving preferences');
+  }
+});
+
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
