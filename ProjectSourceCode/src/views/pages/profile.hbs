@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
+{{> header}}
 <body>
-    
+     {{> message}}
      <div class="profile-container">
        <div>
            <h1>User Profile</h1>
@@ -17,6 +10,7 @@
                <div class="profile-picture">
                     <!-- Display Profile Picture -->
                        <img src="'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" alt="Profile Picture" class="profile-picture" id="profile-picture">
+
 
                        <div class="profile-details">
                            <p><strong>Username:</strong> {{username}}</p>
@@ -56,8 +50,6 @@
             </div>
         </div>
     </div>
-</body>
-</html>
 
 <style>
     .profile-container {
