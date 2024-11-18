@@ -1,3 +1,10 @@
+November 18th, 2024
+- What we did last week
+  - users can customize their profile picture from a selection of images
+  - users can delete their account after registering
+- Feature Demo
+- To do: allow users to make notification preferences and see personal messages
+
 November 12th, 2024
 - What we did last week
   - users can now login once they have created their account
