@@ -1,4 +1,19 @@
 # Release Notes for Lock-In Learn v1.0.0
+**Release Date: 2024-11-19**
+## New Features
+- **Customize Profile Pictures**:
+  - Users can customize their profile picture from a selection of images. 
+
+- **Delete Account**:
+  - Users can delete their account after registering. 
+
+## Known Issues
+- **Notification Preferences**:
+  - Users should be able to make timed and scheduled messages.
+
+- **See personal messages**:
+  - There is no way for users to see their personal messages.
+
 **Release Date: 2024-11-12**
 ## New Features
 - **Login**:
