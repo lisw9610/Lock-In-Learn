@@ -20,6 +20,7 @@ const dbConfig = {
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
+  profile_picture: "https://pbs.twimg.com/profile_images/1455169155733377027/Eczv5-Jb_400x400.jpg"
 };
 
 const db = pgp(dbConfig);
