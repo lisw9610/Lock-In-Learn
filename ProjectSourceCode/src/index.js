@@ -259,12 +259,13 @@ app.get('/7dayweek', (req,res) => {
 })
 
 app.post('/message-board', async (req, res) => {
+	const title = req.body.title;
 	const message = req.body.message;
 	const username = req.session.user.username;
 	
-	var query = "INSERT INTO posts (message, username) VALUES ($1, $2);";
+	var query = "INSERT INTO posts (title, message, username) VALUES ($1, $2, $3);";
 	
-	await db.none(query, [message, username])
+	await db.none(query, [title, message, username])
 		.then(() => {
 			console.log('Successful post');
 			res.status(200).redirect('/message-board');
@@ -276,13 +277,14 @@ app.post('/message-board', async (req, res) => {
 })
 
 app.get('/message-board', (req, res) => {
+	const title = null;
 	const message = null;
 	const username = null;
 
 	
-	var query = "SELECT message, username FROM posts;";
+	var query = "SELECT title, message, username FROM posts;";
 	
-	db.any(query, [message, username])
+	db.any(query, [title, message, username])
 		.then(async data => {
 			console.log('Message board messages loaded');
 			res.status(200).render('./pages/message-board', {
