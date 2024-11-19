@@ -258,14 +258,47 @@ app.get('/7dayweek', (req,res) => {
   res.render('./layouts/7dayweek');
 })
 
+app.post('/message-board', async (req, res) => {
+	const message = req.body.message;
+	const username = req.session.user.username;
+	
+	var query = "INSERT INTO posts (message, username) VALUES ($1, $2);";
+	
+	await db.one(query, [message, username])
+		.then(() => {
+			console.log('Message board messages loaded');
+			res.status(200).render('./pages/message-board', {
+				post_author: username,
+				post_text: message
+		    });
+		})
+		.catch(err => {
+			console.error('Error');
+          
+		});	
+	res.render('./pages/message-board');
+})
+
+app.get('/message-board', (req, res) => {
+	const message = null;
+	const username = null;
+
+	
+	var query = "SELECT message, username FROM posts;";
+	
+	db.one(query, [message, username])
+		.then(async data => {
+			console.log('message posted');
+			res.status(200).render('./pages/message-board', {
+				post_author: data.username,
+				post_text: data.message
+		    });
+		})
+		.catch(err => {
+			console.error('Error');
+            res.status(400).render('./pages/message-board');
+		});	
+})
+
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
-
-//get request for 5dayweek view and 7dayweek view
-app.get('/5dayweek', (req,res) => {
-  res.render('./layouts/5dayweek');
-})
-
-app.get('/7dayweek', (req,res) => {
-  res.render('./layouts/7dayweek');
-})

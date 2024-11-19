@@ -1,0 +1,41 @@
+<head>
+<style>
+body{
+	font: 12px Arial,Tahoma,Helvetica,FreeSans,sans-serif;
+	text-transform: inherit;
+	color: #333;
+	background: #e7edee;
+	width: 100%;
+}
+.wrap{
+	width: 720px;
+	margin: 15px auto;
+	padding: 15px 10px;
+	background: white;
+	border: 2px solid #DBDBDB;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.title {
+  font-weight:700;
+}
+
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div><h1 class="title">Posts</h1></div>
+  {{> posts}}
+</div>
+
+<div class="wrap" style="text-align:center;">
+	<form method="POST" action="/message-board">
+		
+		<textarea id="message" name="message" rows="4" maxlength="500" placeholder="message..." style="width:50%" required></textarea>
+		
+		<input type="submit" value="Post">
+	</form>
+</div>
+</body>

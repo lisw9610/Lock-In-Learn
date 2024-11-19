@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
+DROP TABLE IF EXISTS posts;
 
 CREATE TABLE users (
    user_id SERIAL PRIMARY KEY NOT NULL,
@@ -34,4 +35,10 @@ CREATE TABLE friends (
     FOREIGN KEY (friend_id) REFERENCES users(user_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, friend_id),
     CHECK (user_id != friend_id)  -- Prevent self-referencing friendship
+);
+
+CREATE TABLE posts (
+	post_id PRIMARY KEY,
+	message VARCHAR(MAX) NOT NULL,
+	username INT NOT NULL
 );
