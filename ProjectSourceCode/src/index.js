@@ -288,7 +288,7 @@ app.get('/message-board', (req, res) => {
 		.then(async data => {
 			console.log('Message board messages loaded');
 			res.status(200).render('./pages/message-board', {
-				post_data: data
+				post_data: data.reverse()
 		    });
 		})
 		.catch(err => {
