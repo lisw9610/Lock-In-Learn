@@ -1,6 +1,14 @@
 {{#each post_data}}
-<div>
-	<h1>{{ username }}</h1>
+<div class="post">
+	<h4>{{ title }}</h4>
+	<p class="username">By: {{ username }}</p>
 	<p>{{ message }}</p>
+	
+	<!--
+	<form>
+		<input id="reply" name="reply" type="text" placeholder="reply...">
+		<input type="submit" value="REPLY">
+	</form>
+	-->
 </div>
 {{/each}}
