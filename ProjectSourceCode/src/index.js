@@ -153,12 +153,13 @@ app.post('/register', async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const hash = await bcrypt.hash(req.body.password, 10);
+  const profile_picture = req.body.profile_picture || "https://pbs.twimg.com/profile_images/1455169155733377027/Eczv5-Jb_400x400.jpg";
 
   //defining the query statement
-  var query = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`;
+  var query = `INSERT INTO users (username, email, password, profile_picture) VALUES ($1, $2, $3, $4)`;
   
-	await db.none(query, [username, email, hash])
-		.then(data => {
+	await db.none(query, [username, email, hash, profile_picture])
+		.then(() => {
 			console.log('User registered successfully');
 			res.status(200).render('./pages/login', {
 				message: 'User successfully registered',
@@ -170,13 +171,13 @@ app.post('/register', async (req, res) => {
       // res.render('/register');
 
       if(err.code === '23505') {
-		res.status(409).render('./pages/register', {
-				message: 'That username already exists',
-		});
+          res.status(409).render('./pages/register', {
+          message: 'That username already exists',
+        });
       } else {
-		res.status(500).render('./pages/register', {
-				message: 'An error occured during registration. Please try again.',
-		});
+          res.status(500).render('./pages/register', {
+              message: 'An error occured during registration. Please try again.',
+          });
       }
 		});	
 });
