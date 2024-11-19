@@ -264,19 +264,15 @@ app.post('/message-board', async (req, res) => {
 	
 	var query = "INSERT INTO posts (message, username) VALUES ($1, $2);";
 	
-	await db.one(query, [message, username])
+	await db.none(query, [message, username])
 		.then(() => {
-			console.log('Message board messages loaded');
-			res.status(200).render('./pages/message-board', {
-				post_author: username,
-				post_text: message
-		    });
+			console.log('Successful post');
+			res.status(200).redirect('/message-board');
 		})
 		.catch(err => {
-			console.error('Error');
-          
+			console.error('Error', err);
+            res.status(400).redirect('/message-board');
 		});	
-	res.render('./pages/message-board');
 })
 
 app.get('/message-board', (req, res) => {
@@ -286,16 +282,15 @@ app.get('/message-board', (req, res) => {
 	
 	var query = "SELECT message, username FROM posts;";
 	
-	db.one(query, [message, username])
+	db.any(query, [message, username])
 		.then(async data => {
-			console.log('message posted');
+			console.log('Message board messages loaded');
 			res.status(200).render('./pages/message-board', {
-				post_author: data.username,
-				post_text: data.message
+				post_data: data
 		    });
 		})
 		.catch(err => {
-			console.error('Error');
+			console.error('Error:', err);
             res.status(400).render('./pages/message-board');
 		});	
 })

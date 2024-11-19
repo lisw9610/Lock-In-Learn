@@ -38,7 +38,7 @@ CREATE TABLE friends (
 );
 
 CREATE TABLE posts (
-	post_id PRIMARY KEY,
-	message VARCHAR(MAX) NOT NULL,
-	username INT NOT NULL
+	post_id SERIAL PRIMARY KEY NOT NULL,
+	message TEXT NOT NULL,
+	username VARCHAR(255) NOT NULL
 );
