@@ -98,7 +98,6 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username;
-  console.log(`Querying for username: ${username}`);
   const query = 'SELECT password, email, profile_picture FROM users WHERE username = $1 LIMIT 1';
  
  
@@ -241,6 +240,53 @@ app.post('/delete-account', (req, res) => {
           console.error("Failed to delete account:", error);
           res.json({ success: false });
       });
+});
+
+app.put('/changePassword', (req, res) => {
+  const { currentPass, newPass } = req.body;
+  const username = req.session?.user?.username || req.body.username;
+  // const currentPass = req.body.currentPass;
+  // const newPass = req.body.newPass;
+
+  if (!username) {
+    return res.status(400).render('./pages/profile', {
+      success: false,
+      message: "Username is missing. Please log in again.",
+    });
+  }
+
+  // Fetch user from the database
+  db.one("SELECT * FROM users WHERE username = $1;", [username]) 
+    .then(async data => {
+
+      // Check if the current password matches
+      const isMatch = await bcrypt.compare(currentPass, data.password);
+
+      if (isMatch) {
+
+        // Hash the new password
+        const newHashedPass = await bcrypt.hash(newPass, 10);
+        
+        // Update the password in the database
+        await db.none("UPDATE users SET password = $1 WHERE username = $2;", [newHashedPass, username]);
+
+        res.status(200).render('./pages/profile', {
+          success: true,
+          message: "Successfully changed password.",
+        });
+      } else {
+        res.status(401).render('./pages/profile', {
+          success: false,
+          message: "Incorrect password.",
+        });
+      }
+    })
+    .catch (error => {
+      res.status(500).render('./pages/profile', {
+        success: false,
+        message: "An error occurred while updating the password.",
+      });
+    });
 });
 
 

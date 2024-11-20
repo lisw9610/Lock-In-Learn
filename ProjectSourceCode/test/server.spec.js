@@ -86,10 +86,10 @@ describe('Log In Route Tests', () => {
     );
   });
 
-  after(async () => {
-    // Clean up database
-    await db.query('TRUNCATE TABLE users CASCADE');
-  });
+  // after(async () => {
+  //   // Clean up database
+  //   await db.query('TRUNCATE TABLE users CASCADE');
+  // });
 
   describe('Test log in API', () => {
     it('positive : /login (post)', done => {
@@ -125,5 +125,60 @@ describe('Log In Route Tests', () => {
           done();
         });
     });
+  });
+});
+
+
+// changing password test
+describe('Change password of user', () => {
+  const testUser = {
+    username: 'testuser',
+    email: 'email@email.com',
+    password: 'password',
+  }
+  let agent; // this maintains session between requests
+
+  before(async () => {
+    agent = chai.request.agent(server);
+    // Clear users table and create test user
+    await db.query('TRUNCATE TABLE users CASCADE');
+    const hashedPassword = await bcrypt.hash(testUser.password, 10);
+    await db.query(
+      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)',
+      [testUser.username, testUser.email, hashedPassword]
+    );
+    await agent
+      .post('/login') 
+      .send({ username: testUser.username, password: testUser.password })
+      .then((res) => {
+        expect(res).to.have.status(200);
+      });
+  });
+
+  
+  it('Positive : /changePassword (put)', (done) => {
+    agent
+    .put('/changePassword')
+    .send({ currentPass: 'password', newPass: 'newPassword', username: testUser.username })
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      res.text.should.include('Successfully changed password.');
+      done();
+    });
+  });
+  it('Negative : /changePassword. Checking invalid password', (done) => {
+    agent
+    .put('/changePassword')
+    .send({ currentPass: 'wrongPassword', newPass: 'newPassword', username: testUser.username })
+    .end((err, res) => {
+      expect(res).to.have.status(401);
+      res.text.should.include('Incorrect password.');
+      done();
+    });
+  });
+  after(async () => {
+    // Clean up database
+    await db.query('TRUNCATE TABLE users CASCADE');
+    agent.close();
   });
 });

@@ -66,7 +66,38 @@
                    <button type="submit">Save Preferences</button>
                </form>
            </div>
-           <button id="delete-account-button">Delete Account</button>
+           <button class="my-2 btn btn-secondary" id="delete-account-button">Delete Account</button>
+
+           {{!-- change password --}}
+           <button class="my-2 btn btn-primary" id="change-password-button" data-bs-toggle="modal" data-bs-target="#passwordChangeModal">Change Password</button>
+           <div class="modal" id="passwordChangeModal" tabindex="-1" aria-labelledby="questionModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="questionModalLabel">Are you sure you want to change your password?</h5>
+                        </div>
+                        <div class="my-3" id="areYouSureButtons">
+                            <button type="button" class="btn btn-success" id="changePassBtn">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Naur</button>
+                        </div>
+                        <div class="modal-body" style="display: none;" id="passwordPromptModal">
+                            <form id="questionForm">
+                                <div class="mb-3">
+                                    <label class="form-label" for="currentPass">Current Pasword</label>
+                                    <input type="password" class="form-control" id="currentPass" >
+
+                                    <label class="form-label" for="newPass">New Pasword</label>
+                                    <input type="password" class="form-control" id="newPass" >
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="submitChangedPassword">Set new password</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           </div>
        </div>
    </div>
 
@@ -134,6 +165,55 @@
             .catch(error => console.error("Error:", error));
         }
     });
+
+    // change password JS
+    document.getElementById('submitChangedPassword').addEventListener('click', () => {
+        const currentPass = document.getElementById('currentPass').value;
+        const newPass = document.getElementById('newPass').value;
+        
+        if(currentPass && newPass) {
+            console.log('Current Pass:', currentPass);
+            console.log('New Pass:', newPass);
+            // send change password to backend
+            fetch('/changePassword', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ currentPass, newPass }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Your password has been changed!");
+                    window.location.href = '/profile';
+                } else {
+                    alert(data.message || "Something went wrong with changing your password.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        } else {
+            alert("Please answer both prompts.");
+        }
+    });
+    // reset modal 
+    function resetModelState() {
+        document.getElementById("passwordPromptModal").style.display = "none";
+        document.getElementById("areYouSureButtons").style.display = "block";
+
+        document.getElementById('currentPass').value = '';
+        document.getElementById('newPass').value = '';
+    }
+    // event listeners for when the user presses the close button
+    document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
+        button.addEventListener('click', resetModelState);
+    });
+    // show the modal form if yes is clicked 
+    document.getElementById("changePassBtn").addEventListener('click', () => {
+        document.getElementById("passwordPromptModal").style.display = "block";
+        document.getElementById("areYouSureButtons").style.display = "none";
+    });
+
 </script>
 
 
