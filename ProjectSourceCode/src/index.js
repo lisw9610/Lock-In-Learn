@@ -188,21 +188,20 @@ app.get('/profile', (req,res) => {
   res.render('./pages/profile');
 })
 
-// Endpoint to handle form submission
+// Endpoint to handle form submission (only for email preferences)
 app.post('/save-preferences', async (req, res) => {
-  const { user_id, method, time, assignmentReminder } = req.body;
+  const { user_id, time, assignmentReminder } = req.body;
 
   try {
     const query = `
-      INSERT INTO notification_preferences (user_id, method, time, assignment_reminder)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO notification_preferences (user_id, time, assignment_reminder)
+      VALUES ($1, $2, $3)
       ON CONFLICT (user_id) DO UPDATE
-      SET method = EXCLUDED.method,
-          time = EXCLUDED.time,
+      SET time = EXCLUDED.time,
           assignment_reminder = EXCLUDED.assignment_reminder
       RETURNING *;
     `;
-    const values = [user_id, method, time, assignmentReminder];
+    const values = [user_id, time, assignmentReminder];
     const result = await pool.query(query, values);
 
     res.status(200).json(result.rows[0]);
@@ -211,6 +210,7 @@ app.post('/save-preferences', async (req, res) => {
     res.status(500).send('Error saving preferences');
   }
 });
+
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
