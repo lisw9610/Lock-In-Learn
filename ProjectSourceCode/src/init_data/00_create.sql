@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS reply;
 
 CREATE TABLE users (
    user_id SERIAL PRIMARY KEY NOT NULL,
@@ -40,6 +41,14 @@ CREATE TABLE friends (
 CREATE TABLE posts (
 	post_id SERIAL PRIMARY KEY NOT NULL,
 	title VARCHAR(50) NOT NULL,
-	message TEXT NOT NULL,
-	username VARCHAR(255) NOT NULL
+	username VARCHAR(255) NOT NULL,
+	message TEXT NOT NULL
+);
+
+CREATE TABLE reply (
+	reply_id SERIAL PRIMARY KEY NOT NULL,
+	post_id INT NOT NULL,
+	reply_user VARCHAR(255) NOT NULL,
+	reply_text TEXT NOT NULL,
+	FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );

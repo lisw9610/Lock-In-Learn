@@ -297,14 +297,14 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/5dayweek', (req,res) => {
-  res.render('./layouts/5dayweek');
+  res.render('./pages/5dayweek');
 })
 
 app.get('/7dayweek', (req,res) => {
-  res.render('./layouts/7dayweek');
+  res.render('./pages/7dayweek');
 })
 
-app.post('/message-board', async (req, res) => {
+app.post('/message-post', async (req, res) => {
 	const title = req.body.title;
 	const message = req.body.message;
 	const username = req.session.user.username;
@@ -322,17 +322,42 @@ app.post('/message-board', async (req, res) => {
 		});	
 })
 
-app.get('/message-board', (req, res) => {
-	const title = null;
-	const message = null;
-	const username = null;
+app.post('/message-reply', async (req, res) => {
+	const postId = req.body.postId;
+	const reply = req.body.reply;
+	const username = req.session.user.username;
+	
+	var query = "INSERT INTO reply (post_id, reply_user, reply_text) VALUES ($1, $2, $3);";
+	
+	await db.none(query, [postId, username, reply])
+		.then(() => {
+			console.log('Successful reply');
+			res.status(200).redirect('/message-board');
+		})
+		.catch(err => {
+			console.error('Error', err);
+            res.status(400).redirect('/message-board');
+		});	
+})
 
+app.get('/message-board', (req, res) => {
+	var post_query = "SELECT * FROM posts;";
+	var reply_query = "SELECT reply_user, reply_text FROM reply WHERE post_id = $1;"
 	
-	var query = "SELECT title, message, username FROM posts;";
-	
-	db.any(query, [title, message, username])
+	db.task(async mes => {
+        // Fetch all posts
+        const posts = await mes.any(post_query);
+        
+        // Loop through each post and fetch the matching replies
+        for (let post of posts) {
+            // Fetch replies for each post using the post's id
+            const replies = await mes.any(reply_query, [post.post_id]);
+            // Add the replies to the current post object
+            post.replies = replies;
+        }
+        return posts;
+    })
 		.then(async data => {
-			console.log('Message board messages loaded');
 			res.status(200).render('./pages/message-board', {
 				post_data: data.reverse()
 		    });
