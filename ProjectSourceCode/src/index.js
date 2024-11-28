@@ -293,15 +293,13 @@ app.put('/changePassword', (req, res) => {
 app.get('/logout', (req, res) => {
 	console.log(`logged user out`);
 	req.session.destroy();
-	res.render('pages/logout');
+    res.status(200).render('./pages/login', {
+        message: "User successfully logged out.",
+    });
 });
 
-app.get('/5dayweek', (req,res) => {
-  res.render('./pages/5dayweek');
-})
-
-app.get('/7dayweek', (req,res) => {
-  res.render('./pages/7dayweek');
+app.get('/calendar', (req,res) => {
+  res.render('./pages/calendar');
 })
 
 app.post('/message-post', async (req, res) => {
