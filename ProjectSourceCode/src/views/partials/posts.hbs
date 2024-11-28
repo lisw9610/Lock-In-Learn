@@ -1,14 +1,34 @@
+<!DOCTYPE html>
+<html>
 {{#each post_data}}
 <div class="post">
 	<h4>{{ title }}</h4>
 	<p class="username">By: {{ username }}</p>
 	<p>{{ message }}</p>
 	
-	<!--
-	<form>
-		<input id="reply" name="reply" type="text" placeholder="reply...">
-		<input type="submit" value="REPLY">
+	
+	<button data-toggle="collapse" data-target="#replies-{{@index}}">Replies({{replies.length}})</button>
+	<div id="replies-{{@index}}" class="collapse" style="margin-left: 5%; box-shadow: -10px 5px #888888;">
+		{{#each replies}}
+			<div class="reply">
+			<p style="font-weight:bold;">{{ reply_user }}</p>
+			<p style="margin-left: 5px;">{{ reply_text }}</p>
+			</div>
+		{{/each}}
+	</div>
+	
+	<form method="POST" action="/message-reply" class="reply-form" style="margin:auto;max-width:300px;margin-top:10px;">
+		<input type="hidden" id="postId" name="postId" value={{ post_id }}>
+		
+		<span style="display: inline-block;">
+		<input type=text id="reply" name="reply" maxlength="500" placeholder="reply..." required>
+		</span>
+		<span style="display: inline-block;">
+		<button type="submit"><i class="bi bi-arrow-90deg-right"></i></button>
+		</span>
+		
 	</form>
-	-->
+
 </div>
 {{/each}}
+</html>

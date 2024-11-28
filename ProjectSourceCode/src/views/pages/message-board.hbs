@@ -24,6 +24,13 @@ body{
   border-bottom: 1px solid black;
   padding-bottom: 5px;
 }
+.reply {
+  border-bottom: 1px gray;
+  border-bottom-style: ridge;
+  padding-left: 2px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
 input[type=text], textarea, select {
   width: 100%;
   padding: 12px 20px;
@@ -33,7 +40,7 @@ input[type=text], textarea, select {
   border-radius: 4px;
   box-sizing: border-box;
 }
-input[type=submit] {
+input[type=submit], form.reply-form button{
   width: 100%;
   background-color: #6082B6;
   color: white;
@@ -43,10 +50,12 @@ input[type=submit] {
   border-radius: 4px;
   cursor: pointer;
 }
-input[type=submit]:hover {
+input[type=submit]:hover, form.reply-form button:hover{
   background-color: #4682B4;
 }
 </style>
+
+
 </head>
 
 <body>
@@ -56,7 +65,7 @@ input[type=submit]:hover {
 </div>
 
 <div class="wrap" style="text-align:center;">
-	<form method="POST" action="/message-board">
+	<form method="POST" action="/message-post">
 		<input type="text" id="title" name="title" maxlength="50" placeholder="title..." required>
 		
 		<textarea id="message" name="message" rows="4" maxlength="500" placeholder="message..." required></textarea>
