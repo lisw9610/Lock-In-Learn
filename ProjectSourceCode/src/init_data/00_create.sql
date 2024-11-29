@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS friends;
-DROP TABLE IF EXISTS assignments;
+DROP TABLE IF EXISTS event;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
 DROP TABLE IF EXISTS posts;
@@ -21,11 +21,12 @@ CREATE TABLE private_info (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE assignments (
-    task_id SERIAL PRIMARY KEY NOT NULL,
+CREATE TABLE events (
+    event_id SERIAL PRIMARY KEY NOT NULL,
     user_id INT NOT NULL,
-    task VARCHAR(250),
+    title VARCHAR(250),
     date DATE,
+    description VARCHAR(1000),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

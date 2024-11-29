@@ -366,5 +366,22 @@ app.get('/message-board', (req, res) => {
 		});	
 })
 
+app.post('/addEvent', async (req, res) => {
+  const {title, start, description} = req.body; 
+
+  var query = "INSERT INTO events (title, date, description) VALUE ($1, $2, $3);";
+  await db.none(query, [title, start, description])
+    .then(() => {
+      console.log("Successfully added event to db");
+      res.status(200).redirect('/calendar');
+		})
+		.catch(err => {
+			console.error('Error', err);
+            res.status(400).redirect('/calendar');
+		});	
+
+});
+
+
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
