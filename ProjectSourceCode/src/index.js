@@ -98,7 +98,7 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username;
-  const query = 'SELECT password, email, profile_picture FROM users WHERE username = $1 LIMIT 1';
+  const query = 'SELECT user_id, password, email, profile_picture FROM users WHERE username = $1 LIMIT 1';
  
  
   // get the student_id based on the emailid
@@ -112,10 +112,12 @@ app.post('/login', (req, res) => {
       user.username = username;
       user.email = data.email;
       user.profile_picture = data.profile_picture;
- 
+      user.userId = data.user_id;
  
       req.session.user = user;
       req.session.save();
+
+      console.log(user);
      
       res.status(200).render('./pages/profile', {
         status: 'success',
@@ -299,6 +301,19 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/calendar', (req,res) => {
+  // get all events that are from the user
+  let query = "SELECT * FROM events WHERE user_id = $1;";
+
+  const userId = req.session.user.userId;
+  db.any(query, [userId])
+    .then((data) => {
+      console.log("successfully retrieved all events from user:", data)
+      // now we gotta query the events to the calendar
+    })
+    .catch((err) => {
+      console.error("something went wrong when retrieving user's events.");
+    })
+
   res.render('./pages/calendar');
 })
 
@@ -369,8 +384,8 @@ app.get('/message-board', (req, res) => {
 app.post('/addEvent', async (req, res) => {
   const {title, start, description} = req.body; 
 
-  var query = "INSERT INTO events (title, date, description) VALUE ($1, $2, $3);";
-  await db.none(query, [title, start, description])
+  var query = "INSERT INTO events (user_id, title, date, description) VALUES ($1, $2, $3, $4);";
+  await db.none(query, [req.session.user.userId, title, start, description])
     .then(() => {
       console.log("Successfully added event to db");
       res.status(200).redirect('/calendar');
