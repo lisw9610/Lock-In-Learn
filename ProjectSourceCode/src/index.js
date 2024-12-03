@@ -219,11 +219,21 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 app.get('/profile', (req, res) => {
-  res.render('./pages/profile', {
-    username: req.session.user.username,
-    email: req.session.user.email,
-    profile_picture: req.session.user.profile_picture
-  });
+	var post_query = "SELECT * FROM posts WHERE username = $1;";
+	
+	db.any(post_query, [req.session.user.username])
+		.then(async data => {
+			res.status(200).render('./pages/profile', {
+				username: req.session.user.username,
+				email: req.session.user.email,
+				profile_picture: req.session.user.profile_picture,
+				posts: data
+		    });
+		})
+		.catch(err => {
+			console.error('Error:', err);
+            res.status(400).render('./pages/profile');
+		});	
 });
 
 app.post('/delete-account', (req, res) => {
@@ -305,6 +315,8 @@ app.get('/logout', (req, res) => {
 app.get('/calendar', (req,res) => {
   res.render('./pages/calendar');
 })
+
+//Message Board methods
 
 app.post('/message-post', async (req, res) => {
 	const title = req.body.title;
