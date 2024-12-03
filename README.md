@@ -1,7 +1,7 @@
 # Lock-In-Learn
 
 ## Application Description
-Our application Lock-In-Learn is an academic calendar used for students to keep track of their assignments.
+Lock-In-Learn is an academic calendar app designed to help students effectively manage their assignments, deadlines, and academic tasks. It provides a streamlined platform for organizing coursework, ensuring students stay on top of their responsibilities and achieve their academic goals.
 
 ## Contributors
 - Sophie Tu
