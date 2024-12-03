@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html>
+<style>
+.content {
+    flex: 1;
+    position: relative;
+}
+
+.fixed-element {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+}
+
+.hide-btn {
+  border: none;
+  background-color: inherit;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.hide-btn:hover {background: #eee;}
+
+</style>
+
 {{#each post_data}}
-<div class="post">
+<div class="post, content">
 	<h4>{{ title }}</h4>
 	<p class="username">By: {{ username }}</p>
 	<p>{{ message }}</p>
 	
+	
+
+	
+	
+	<form method="POST" action="/message-delete" class="fixed-element">	
+		<input type="hidden" id="postId" name="postId" value={{ post_id }}>
+		<button type="submit" class="hide-btn" {{#unless (ifeq ../user.username username)}}disabled{{/unless}} ><i class="bi bi-trash"></i></button>
+	</form>
 	
 	<button data-toggle="collapse" data-target="#replies-{{@index}}">Replies({{replies.length}})</button>
 	<div id="replies-{{@index}}" class="collapse" style="margin-left: 5%; box-shadow: -10px 5px #888888;">

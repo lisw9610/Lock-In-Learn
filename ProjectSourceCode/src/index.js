@@ -51,6 +51,10 @@ db.connect()
 // <!-- Section 3 : App Settings -->
 // *****************************************************
 
+Handlebars.registerHelper('ifeq', function (a, b) {
+    return a == b;
+});
+
 // Register `hbs` as our view engine using its bound `engine()` function.
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -338,6 +342,24 @@ app.post('/message-reply', async (req, res) => {
 		});	
 })
 
+app.post('/message-delete', async (req, res) => {
+	var del_post = "DELETE FROM posts WHERE post_id = $1";
+	var del_reply = "DELETE FROM reply WHERE post_id = $1";
+	
+	db.task(async del => {
+		await del.none(del_post, [req.body.postId]);
+		await del.none(del_reply, [req.body.postId]);
+	})
+	.then(async data => {
+			console.log("deleted message $1", [req.body.postId]);
+			res.status(200).redirect('/message-board');
+		})
+		.catch(err => {
+			console.error('Error:', err);
+            res.status(200).redirect('/message-board');
+	});		
+})
+
 app.get('/message-board', (req, res) => {
 	var post_query = "SELECT * FROM posts;";
 	var reply_query = "SELECT reply_user, reply_text FROM reply WHERE post_id = $1;"
@@ -345,7 +367,7 @@ app.get('/message-board', (req, res) => {
 	db.task(async mes => {
         // Fetch all posts
         const posts = await mes.any(post_query);
-        
+        		
         // Loop through each post and fetch the matching replies
         for (let post of posts) {
             // Fetch replies for each post using the post's id
@@ -357,7 +379,8 @@ app.get('/message-board', (req, res) => {
     })
 		.then(async data => {
 			res.status(200).render('./pages/message-board', {
-				post_data: data.reverse()
+				post_data: data.reverse(),
+				user: req.session.user
 		    });
 		})
 		.catch(err => {
