@@ -1,7 +1,20 @@
-{{> header}}
 <body>
     {{> message}}
     <div class="profile-container">
+	
+	
+		<div class="fixed-element">
+			<h1>Message Board Posts</h1>
+			{{#each posts}}
+				<div class="profile-card" style="width: 400px;">
+				
+					<h4>{{ title }}</h4>
+					<p>{{ message }}</p>
+				</div>
+			{{/each}}
+		</div>
+	
+	
       <div>
        <h1>User Profile</h1>
        <div class="profile-card">
@@ -308,4 +321,11 @@
    .selectable-image.selected {
        border-color: #4CAF50;
    }
+   
+.fixed-element {
+    position: absolute;
+    top: 10%;
+    right: 20%;
+    padding: 10px;
+}
 </style>
