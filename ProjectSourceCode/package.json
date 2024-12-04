@@ -22,7 +22,7 @@
     },
     "scripts": {
       "prestart": "npm install",
-      "start": "nodemon index.js",
+      "start": "nodemon index.js send_email.js",
       "test": "mocha",
       "testandrun": "npm run prestart && npm run test && npm start"
     }
