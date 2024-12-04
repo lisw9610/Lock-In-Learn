@@ -1,0 +1,133 @@
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script>
+		document.addEventListener('DOMContentLoaded', function() {
+		var calendarEl = document.getElementById('calendar');
+		var calendar = new FullCalendar.Calendar(calendarEl, {
+			initialView: 'dayGridMonth',
+			headerToolbar: { 
+				center: 'dayGridMonth,timeGridWeek,addEventButton'
+			}, // buttons for switching between views
+			customButtons: {
+				addEventButton: {
+					text: 'addEvent...',
+					click: function() {
+						// prompt a form that asks for title, date, time, description too
+						document.getElementById('addEventModal').style.display = 'block';
+					}
+				}
+			},
+			views: {
+				dayGridMonth: { // name of view
+					titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' }
+				}
+			}
+		});
+			calendar.render();
+
+            const events = {{{ data }}};
+  		    console.log('Events passed to the page:', events);
+
+            for (let i of {{{ data }}}) {
+                calendar.addEvent(i)
+            }
+
+			// handle modal form submission
+			document.getElementById('submit-form').addEventListener('click', function(event) {
+				event.preventDefault(); // Prevent the form from refreshing the page
+
+				const eventForm = document.getElementById('eventForm');
+				if (eventForm.checkValidity()) { // checks if all required fields are met
+					const formData = new FormData(eventForm);
+
+					// Get form data
+					const title = formData.get('title');
+					// const dateStr = document.getElementById('date').value;
+					const description = formData.get('description');
+                    const allDay = formData.get('allDay') == 'true';
+                    const time = formData.get('time') || "00:00";
+					const dateStr = formData.get('date');
+
+                    let date;
+                    if (time) { 
+                        const combinedDateTime = `${dateStr}T${time}`;
+					    date = new Date(combinedDateTime);
+                    } else {
+                        date = new Date(dateStr);
+                    }
+
+                    console.log("the original date is:", dateStr, "then created as a new date is:", date);
+					
+					if (!isNaN(date.valueOf())) { // valid?
+
+						// Create event object
+						const newEvent = {
+						title: title,
+						start: date, // FullCalendar requires ISO 8601 date strings
+						description: description,
+						allDay: allDay
+						};
+
+						// Add the event to the calendar
+						calendar.addEvent(newEvent);
+
+						// now we need to update the database
+						fetch('/addEvent', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(newEvent)
+						})
+							.then(response => {
+								if(response.ok) {
+									alert('Event successfully added to the database!');
+								} else { 
+									throw new Error('Failed to save event to the database.')
+								}
+							})
+							.catch(error => {
+								console.error('Error saving event to the database.')
+							})
+
+						// Reset the form
+						eventForm.reset();
+
+						// Hide the modal
+						document.getElementById('addEventModal').style.display = 'none';
+
+						console.log('Event added:', newEvent);
+
+					} else {
+						alert('Invalid date.');
+					}
+				} else {
+					alert('Please fill out all required fields.');
+				}
+			});
+
+			// btn to close form data
+			function closeModal() {
+				document.getElementById('addEventModal').style.display = 'none';
+			}
+			document.getElementById('close-modal').addEventListener('click', closeModal);
+		});
+
+        // handle the allday checkbox; if checked, do not ask for time, if unchecked, vice versa.
+        document.addEventListener('DOMContentLoaded', function () {
+            const allDayCheckbox = document.getElementById('allDayCheckbox');
+            const timeInputContainer = document.getElementById('timeInputContainer');
+
+            // Listener for "all-day" checkbox
+            allDayCheckbox.addEventListener('change', function () {
+                if (allDayCheckbox.checked) {
+                    // Hide time input if "all-day" is checked
+                    timeInputContainer.style.display = 'none';
+                } else {
+                    // Show time input if "all-day" is unchecked
+                    timeInputContainer.style.display = 'block';
+                }
+            });
+        });
+
+    </script>

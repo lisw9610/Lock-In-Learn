@@ -24,8 +24,9 @@ CREATE TABLE private_info (
 CREATE TABLE events (
     event_id SERIAL PRIMARY KEY NOT NULL,
     user_id INT NOT NULL,
-    title VARCHAR(250),
-    date DATE,
+    title VARCHAR(250) NOT NULL,
+    start TIMESTAMP NOT NULL,
+    allday BOOLEAN NOT NULL DEFAULT TRUE,
     description VARCHAR(1000),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );

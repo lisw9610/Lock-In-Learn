@@ -309,12 +309,21 @@ app.get('/calendar', (req,res) => {
     .then((data) => {
       console.log("successfully retrieved all events from user:", data)
       // now we gotta query the events to the calendar
+      // Format events as needed for FullCalendar
+      const events = data.map(event => ({
+        title: event.title,
+        start: event.start, // Ensure these match your database field names
+        //end: event.end_date,     // Optional, if you have end times
+        allDay: event.allday,
+        description: event.description // Any other properties you need
+      }));
+      res.status(200).render('./pages/calendar', {data: JSON.stringify(events)});
     })
     .catch((err) => {
-      console.error("something went wrong when retrieving user's events.");
+      console.error("something went wrong when returning user's events:", data);
+      res.render('./pages/calendar');
     })
 
-  res.render('./pages/calendar');
 })
 
 app.post('/message-post', async (req, res) => {
@@ -382,10 +391,10 @@ app.get('/message-board', (req, res) => {
 })
 
 app.post('/addEvent', async (req, res) => {
-  const {title, start, description} = req.body; 
+  const {title, start, allDay, description} = req.body; 
 
-  var query = "INSERT INTO events (user_id, title, date, description) VALUES ($1, $2, $3, $4);";
-  await db.none(query, [req.session.user.userId, title, start, description])
+  var query = "INSERT INTO events (user_id, title, start, allDay, description) VALUES ($1, $2, $3, $4, $5);";
+  await db.none(query, [req.session.user.userId, title, start, allDay, description])
     .then(() => {
       console.log("Successfully added event to db");
       res.status(200).redirect('/calendar');
