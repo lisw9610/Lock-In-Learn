@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS private_info;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS reply;
+DROP TABLE IF EXISTS calendar_events;
 
 CREATE TABLE users (
    user_id SERIAL PRIMARY KEY NOT NULL,
@@ -51,4 +52,15 @@ CREATE TABLE reply (
 	reply_user VARCHAR(255) NOT NULL,
 	reply_text TEXT NOT NULL,
 	FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
+);
+
+CREATE TABLE calendar_events (
+	event_id SERIAL PRIMARY KEY NOT NULL,
+	user_id INT NULL,
+	event_name VARCHAR(100) NOT NULL,
+	event_desc VARCHAR(255),
+	start_time TIME NOT NULL,
+	event_date DATE NOT NULL,
+	notes TEXT,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );

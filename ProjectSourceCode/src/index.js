@@ -55,6 +55,10 @@ Handlebars.registerHelper('ifeq', function (a, b) {
     return a == b;
 });
 
+Handlebars.registerHelper('json', function(arr) {
+  return JSON.stringify(arr);
+});
+
 // Register `hbs` as our view engine using its bound `engine()` function.
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -83,6 +87,7 @@ app.use('/resources', express.static(path.join(__dirname, "resources")));
 // *****************************************************
 const user = {
   username: undefined,
+  user_id: undefined,
   email: undefined,
   password: undefined
 };
@@ -102,13 +107,14 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username;
-  const query = 'SELECT password, email, profile_picture FROM users WHERE username = $1 LIMIT 1';
+  const query = 'SELECT password, email, profile_picture, user_id FROM users WHERE username = $1 LIMIT 1';
  
  
   // get the student_id based on the emailid
   db.one(query, [username])
     .then(async data => {
     user.password = data.password;
+	user.user_id = data.user_id;
     // check if password from request matches with password in DB
     const match = await bcrypt.compare(req.body.password, user.password);
    
@@ -312,10 +318,6 @@ app.get('/logout', (req, res) => {
     });
 });
 
-app.get('/calendar', (req,res) => {
-  res.render('./pages/calendar');
-})
-
 //Message Board methods
 
 app.post('/message-post', async (req, res) => {
@@ -400,6 +402,71 @@ app.get('/message-board', (req, res) => {
             res.status(400).render('./pages/message-board');
 		});	
 })
+
+//calendar methods
+
+app.get('/calendar', (req,res) => {
+	var calendar_query = "SELECT * FROM calendar_events WHERE user_id = $1";
+	
+	db.task(async cal => {
+        
+            return await cal.any(calendar_query, [req.session.user.user_id]);
+
+    })
+		.then(async data => {
+			res.status(200).render('./pages/calendar', {
+				calendar_data: data
+		    });
+		})
+		.catch(err => {
+			console.error('Error:', err);
+            res.status(400).render('./pages/calendar');
+		});	
+})
+
+app.post('/calendar-add', async (req, res) => {
+	var post_calendar_query = "INSERT INTO calendar_events (event_name, event_desc, start_time, event_date, notes, user_id) VALUES ($1, $2, $3, $4, $5, $6);";
+		
+	await db.none(post_calendar_query, [req.body.event_name, req.body.event_desc, req.body.start_time, req.body.event_date, req.body.notes, req.session.user.user_id])
+		.then(() => {
+			console.log('Event added to calendar successfully');
+			res.status(200).redirect('/calendar');
+		})
+		.catch(err => {
+			console.error('Error', err);
+            res.status(400).redirect('/calendar');
+		});	
+	
+})
+
+app.post('/calendar-edit', async (req, res) => {
+	var edit_calendar_query = "UPDATE calendar_events SET event_name = $1, event_desc = $2, start_time = $3, event_date = $4, notes = $5 WHERE event_id = $6";
+	await db.none(edit_calendar_query, [req.body.event_name, req.body.event_desc, req.body.start_time, req.body.event_date, req.body.notes, req.body.eventId])
+		.then(() => {
+			console.log('Event edited');
+			res.status(200).redirect('/calendar');
+		})
+		.catch(err => {
+			console.error('Error', err);
+            res.status(400).redirect('/calendar');
+		});	
+	
+})
+
+app.post('/calendar-delete', async (req, res) => {
+	var edit_calendar_query = "DELETE FROM calendar_events WHERE event_id = $1";
+	await db.none(edit_calendar_query, [req.body.eventId])
+		.then(() => {
+			console.log('Event deleted');
+			res.status(200).redirect('/calendar');
+		})
+		.catch(err => {
+			console.error('Error', err);
+            res.status(400).redirect('/calendar');
+		});	
+	
+})
+
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
