@@ -13,8 +13,7 @@
 				</div>
 			{{/each}}
 		</div>
-	
-	
+
       <div>
        <h1>User Profile</h1>
        <div class="profile-card">
@@ -51,16 +50,9 @@
 
 
            <div class="notification-preferences">
-               <h2>Notification Preferences</h2>
+
+               <h2>Notification Preferences By Email</h2>
                <form id="notification-form">
-                   <div class="form-group">
-                       <label for="notification-method">Preferred Method:</label>
-                       <select id="notification-method" name="method">
-                           <option value="email">Email</option>
-                           <option value="sms">SMS</option>
-                           <option value="push">Push Notifications</option>
-                       </select>
-                   </div>
                    <div class="form-group">
                        <label for="notification-time">Preferred Time For Weekly Reminder:</label>
                        <input type="time" id="notification-time" name="time">
@@ -115,9 +107,32 @@
    </div>
 
 
+    <script>
+        // Notification preferences
+        document.getElementById('notification-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const method = document.getElementById('notification-method').value;
+            const time = document.getElementById('notification-time').value;
+            const assignmentReminder = document.getElementById('assignment-reminder').value;
 
+            const email = "{{email}}"; // Replace with user's email address
+            const subject = "Notification Preferences Saved";
+            const body = `
+                Your preferences have been saved.\n
+                Time: ${time}\n
+                Assignment Reminder: ${assignmentReminder}
+            `;
 
-<script>
+            Email.send({
+                SecureToken: "your-smtpjs-secure-token", // Replace with your SMTP.js secure token
+                To: email,
+                From: "your-email@example.com", // Replace with your email
+                Subject: subject,
+                Body: body
+            }).then(
+                message => alert("Preferences saved and email sent successfully!")
+            );
+        });
     // image options
     document.getElementById('edit-picture-button').addEventListener('click', () => {
         const imageOptions = document.getElementById('image-options');
@@ -226,7 +241,6 @@
         document.getElementById("passwordPromptModal").style.display = "block";
         document.getElementById("areYouSureButtons").style.display = "none";
     });
-
 </script>
 
 
@@ -328,4 +342,5 @@
     right: 20%;
     padding: 10px;
 }
+
 </style>

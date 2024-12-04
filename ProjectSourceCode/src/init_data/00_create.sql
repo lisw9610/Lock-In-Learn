@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS notification_preferences;
 DROP TABLE IF EXISTS private_info;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS reply;
@@ -12,6 +13,15 @@ CREATE TABLE users (
    password VARCHAR(255) NOT NULL,
    email VARCHAR(250) UNIQUE NOT NULL,
    profile_picture TEXT
+);
+
+CREATE TABLE notification_preferences (
+    preference_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    method VARCHAR(255) NOT NULL,
+    time TIME NOT NULL,
+    assignment_reminder VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE private_info (
