@@ -25,8 +25,7 @@
                     }
                 },
                 eventClick: function(info) {
-                    alert('Event: ' + info.event.title + 'Description: ' + info.event.description);
-
+                    alert('Your event, "' + info.event.title + '", starts on ' + info.event.start);
                     // change the border color just for fun
                     info.el.style.borderColor = 'red';
                 }
@@ -50,30 +49,34 @@
 
                         // Get form data
                         const title = formData.get('title');
-                        // const dateStr = document.getElementById('date').value;
                         const description = formData.get('description');
                         const allDay = formData.get('allDay') == 'true';
-                        const time = formData.get('time') || "00:00";
-                        const dateStr = formData.get('date');
+                        const startTime = formData.get('startTime') || "00:00";
+                        const endTime = formData.get('endTime') || "00:00";
+                        const startDate = formData.get('startDate');
+                        const endDate = formData.get('endDate');
                         const color = formData.get('color');
 
-                        let date;
-                        if (time) { 
-                            const combinedDateTime = `${dateStr}T${time}`;
-                            date = new Date(combinedDateTime);
+                        let start;
+                        let end;
+                        if (startTime) { 
+                            const combinedDateTime = `${startDate}T${startTime}`;
+                            start = new Date(combinedDateTime);
+                            end = new Date(`${endDate}T${endTime}`);
                         } else {
-                            date = new Date(dateStr);
+                            start = new Date(startDate);
+                            end = new Date(endDate);
                         }
                         
-                        if (!isNaN(date.valueOf())) { // valid?
-
+                        if (!isNaN(start.valueOf())) { // valid?
                             // Create event object
                             const newEvent = {
                             title: title,
-                            start: date, // FullCalendar requires ISO 8601 date strings
-                            description: description,
+                            start: start, // FullCalendar requires ISO 8601 date strings
+                            end: end,
                             allDay: allDay,
                             color: color,
+                            description: description,
                             };
 
                             // Add the event to the calendar
@@ -125,15 +128,18 @@
         document.addEventListener('DOMContentLoaded', function () {
             const allDayCheckbox = document.getElementById('allDayCheckbox');
             const timeInputContainer = document.getElementById('timeInputContainer');
+            const endDateContainer = document.getElementById('endDateContainer');
 
             // Listener for "all-day" checkbox
             allDayCheckbox.addEventListener('change', function () {
                 if (allDayCheckbox.checked) {
                     // Hide time input if "all-day" is checked
                     timeInputContainer.style.display = 'none';
+                    endDateContainer.style.display = 'block';
                 } else {
                     // Show time input if "all-day" is unchecked
                     timeInputContainer.style.display = 'block';
+                    endDateContainer.style.display = 'none';
                 }
             });
         });

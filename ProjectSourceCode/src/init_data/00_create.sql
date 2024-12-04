@@ -26,6 +26,7 @@ CREATE TABLE events (
     user_id INT NOT NULL,
     title VARCHAR(250) NOT NULL,
     start TIMESTAMP NOT NULL,
+    end_time TIMESTAMP DEFAULT NULL,
     allday BOOLEAN NOT NULL DEFAULT TRUE,
     color VARCHAR(15) NOT NULL DEFAULT '#000000',
     description VARCHAR(1000),

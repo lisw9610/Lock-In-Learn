@@ -17,22 +17,30 @@
 					<label for="title">Event Title:</label><br>
 					<input type="text" name="title" placeholder="Title of event" required> <br><br>
 
-					<label for="date">Date:</label><br>
-					<input type="date" name="date" placeholder="Format YYYY-MM-DD" required> <br><br>
+					<label for="startDate">Start Date:</label><br>
+					<input type="date" name="startDate" placeholder="Format YYYY-MM-DD" required> <br><br>
 					
+					<div id="endDayContainer" style="display: block;">
+						<label for="endDate">End Date:</label><br>
+						<input type="date" name="endDate" placeholder="Format YYYY-MM-DD" required> <br><br>
+					</div>
+
+					<div id="timeInputContainer" style="display: none;">
+						<label for="startTime">Start Time:</label><br>
+						<input type="time" name="startTime"> <br><br>
+
+						<label for="endTime">End Time:</label><br>
+						<input type="time" name="endTime"> <br><br>
+					</div>
+
 					<label for="allDay">All Day:</label><br>
 					<input type="checkbox" id="allDayCheckbox" name="allDay" value="true" checked> <br><br>
-					
-					<div id="timeInputContainer" style="display: none;">
-						<label for="time">Time:</label><br>
-						<input type="time" name="time"> <br><br>
-					</div>
 
 					<label for="color">Event color:</label><br>
 					<input type="color" name="color" value="#000000" required> <br><br>	
 					
 					<label for="description">Description:</label><br>
-					<input type="text" name="description" placeholder="Description" required> <br><br>	
+					<input type="text" name="description" placeholder="Description"> <br><br>	
 				</form>
 			</div>
 			<div class="modal-footer">

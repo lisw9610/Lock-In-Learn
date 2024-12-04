@@ -313,7 +313,7 @@ app.get('/calendar', (req,res) => {
       const events = data.map(event => ({
         title: event.title,
         start: event.start, // Ensure these match your database field names
-        //end: event.end_date,     // Optional, if you have end times
+        end: event.end_time,     // Optional, if you have end times
         allDay: event.allday,
         color: event.color,
         description: event.description // Any other properties you need
@@ -392,10 +392,10 @@ app.get('/message-board', (req, res) => {
 })
 
 app.post('/addEvent', async (req, res) => {
-  const {title, start, allDay, color, description} = req.body; 
+  const {title, start, end, allDay, color, description} = req.body; 
 
-  var query = "INSERT INTO events (user_id, title, start, allDay, color, description) VALUES ($1, $2, $3, $4, $5, $6);";
-  await db.none(query, [req.session.user.userId, title, start, allDay, color, description])
+  var query = "INSERT INTO events (user_id, title, start, end_time, allday, color, description) VALUES ($1, $2, $3, $4, $5, $6, $7);";
+  await db.none(query, [req.session.user.userId, title, start, end, allDay, color, description])
     .then(() => {
       console.log("Successfully added event to db");
       res.status(200).redirect('/calendar');
