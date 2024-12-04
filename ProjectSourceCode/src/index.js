@@ -14,7 +14,7 @@ const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
-const { pool } = require('./db');
+const { Pool } = require('pg');
 
 
 // *****************************************************
@@ -48,6 +48,9 @@ db.connect()
   .catch(error => {
     console.log('ERROR:', error.message || error);
   });
+ 
+const pool = new Pool(dbConfig);
+
   
 // *****************************************************
 // <!-- Section 3 : App Settings -->
