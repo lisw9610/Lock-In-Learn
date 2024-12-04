@@ -27,6 +27,7 @@ CREATE TABLE events (
     title VARCHAR(250) NOT NULL,
     start TIMESTAMP NOT NULL,
     allday BOOLEAN NOT NULL DEFAULT TRUE,
+    color VARCHAR(15) NOT NULL DEFAULT '#000000',
     description VARCHAR(1000),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
