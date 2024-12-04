@@ -3,26 +3,180 @@
   <head>
     <meta charset='utf-8' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script>
+  </head>
+  <body>
+	<div class="modal" tabindex="-1" id="event-modal">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title">New Task</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+		  </div>
+		  <div class="modal-body">
+			<form method="POST" action="/calendar-add">
+				<div class="mb-3">
+					<label for="event_name" class="form-label">Task	Name</label>
+					<input type="text" class="form-control" name="event_name" placeholder="Event Title" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="event_desc" class="form-label">Task Description</label>
+					<input type="text" class="form-control" name="event_desc" placeholder="Event Description">
+				</div>
+				
+				<div class="mb-3">
+					<label for="start_time" class="form-label">Task Time</label>
+					<input type="time" class="form-control" name="start_time" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="event_date" class="form-label">Task Date</label>
+					<input name="event_date" class="form-control" type="date" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="notes" class="form-label">Additional Notes</label>
+					<textarea rows="3" class="form-control" name="notes" placeholder="notes..."></textarea>
+				</div>
+				
+				<div class="modal-footer">
+					<button id="submit_button" class="btn btn-primary" type="submit">Create Event</button>
+				</div>
+			</form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	
+	<form id="delete-event" method="POST" action="/calendar-delete">
+		<input type="hidden" name="eventId" value=""/>
+	</form>
+	
+	
+	<div class="modal" tabindex="-1" id="event-edit-modal">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title">Edit Task</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+		  </div>
+		  <div class="modal-body">
+			<form method="POST" action="/calendar-edit">
+				<div class="mb-3">
+					<label for="event_name" class="form-label">Task	Name</label>
+					<input type="text" class="form-control" name="event_name" placeholder="Event Title" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="event_desc" class="form-label">Task Description</label>
+					<input type="text" class="form-control" name="event_desc" placeholder="Event Description">
+				</div>
+				
+				<div class="mb-3">
+					<label for="start_time" class="form-label">Task Time</label>
+					<input type="time" class="form-control" name="start_time" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="event_date" class="form-label">Task Date</label>
+					<input name="event_date" class="form-control" type="date" required>
+				</div>
+				
+				<div class="mb-3">
+					<label for="notes" class="form-label">Additional Notes</label>
+					<textarea rows="3" class="form-control" name="notes" placeholder="notes..."></textarea>
+				</div>
+				
+				<input type="hidden" id="eventId" name="eventId" value="">
+				
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-secondary" form="delete-event" value="Delete Event">
+					<button id="submit_button" class="btn btn-primary" type="submit">Save Changes</button>
+				</div>
+			</form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	
+	
+	
+	
+	<div id='calendar'></div>
+	
+	
+	
+	
+<script>
 
-		document.addEventListener('DOMContentLoaded', function() {
+function closeModal() {
+    var modal = new bootstrap.Modal(document.getElementById('event-edit-modal'));
+    modal.hide();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			initialView: 'dayGridMonth',
-			headerToolbar: { center: 'dayGridMonth,timeGridWeek' }, // buttons for switching between views
+			headerToolbar: {
+				center: 'dayGridMonth,timeGridWeek addEventButton' 
 
+			}, // buttons for switching between views
+			dayMaxEvents: true,
 			views: {
 				dayGridMonth: { // name of view
 					titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' }
 				}
-			}
-		});
-			calendar.render();
-		});
+			},
+			
+			
+			customButtons: {
+				addEventButton: {
+					text: 'add task +',
+						click: function() {
+								new bootstrap.Modal(document.querySelector('#event-modal')).show();
+							}
+						}	
+			},	
 
-    </script>
-  </head>
-  <body>
-    <div id='calendar'></div>
-  </body>
+			eventClick: function(info) {
+				
+				const edit_modal = document.querySelector('#event-edit-modal');
+				
+				
+				edit_modal.querySelector('[name="event_name"]').value = info.event.title; 
+				edit_modal.querySelector('[name="event_desc"]').value = calendar_arr[info.event.id].event_desc; 
+				edit_modal.querySelector('[name="start_time"]').value = calendar_arr[info.event.id].start_time.substr(0, calendar_arr[info.event.id].start_time.length - 3); 
+				edit_modal.querySelector('[name="event_date"]').value = calendar_arr[info.event.id].event_date.substr(0,10); 
+				edit_modal.querySelector('[name="notes"]').value = calendar_arr[info.event.id].notes; 
+				edit_modal.querySelector('[name="eventId"]').value = calendar_arr[info.event.id].event_id; 
+				document.querySelector('#delete-event').querySelector('[name="eventId"]').value = calendar_arr[info.event.id].event_id;
+				
+				
+				new bootstrap.Modal(edit_modal).show();
+				
+				
+			}	
+
+				
+			});
+			calendar.render();
+			
+			var num = 0;
+			var calendar_arr = [];
+			for(let i of {{{json calendar_data}}}) {
+				calendar_arr[num] = i;
+				
+				calendar.addEvent({
+					id  : num++, 
+					title  : i.event_name,
+					start  : i.event_date.substr(0,10).concat('T', i.start_time.substr(0, i.start_time.length - 3)),
+					allDay : false 
+				});
+			}
+});
+</script>
+</body>
 </html>
