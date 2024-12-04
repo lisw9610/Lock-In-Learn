@@ -54,7 +54,7 @@
                         const startTime = formData.get('startTime') || "00:00";
                         const endTime = formData.get('endTime') || "00:00";
                         const startDate = formData.get('startDate');
-                        const endDate = formData.get('endDate');
+                        const endDate = formData.get('endDate') || startDate;
                         const color = formData.get('color');
 
                         let start;
