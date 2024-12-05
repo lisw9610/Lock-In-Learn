@@ -64,7 +64,8 @@ async function sendReminders() {
   
   users.forEach(user => {
     const { user_id, time, assignment_reminder, email } = user;
-
+	
+	console.log(user)
     // Send email about the assignment/event reminder
     const subject = 'Assignment/Event Reminder';
     const body = `
@@ -102,11 +103,11 @@ async function sendWeeklyReminder() {
 }
 
 // Schedule the task to run every hour (adjust as needed)
-cron.schedule('0 * * * *', sendReminders); // Every hour
+cron.schedule('* * * * *', sendReminders); // Every hour
 
 // Weekly cron job
 cron.schedule('0 9 * * 1', sendWeeklyReminder); // Every Monday at 9 AM
 
 
 
-
+console.log('nodemailer is running');

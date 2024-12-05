@@ -429,11 +429,19 @@ app.get('/calendar', (req,res) => {
 
 app.post('/calendar-add', async (req, res) => {
 	var post_calendar_query = "INSERT INTO calendar_events (event_name, event_desc, start_time, event_date, notes, user_id) VALUES ($1, $2, $3, $4, $5, $6);";
+	var reminder_query = "INSERT INTO notification_preferences (user_id, time, assignment_reminder) VALUES ($1, $2, $3)";
 		
 	await db.none(post_calendar_query, [req.body.event_name, req.body.event_desc, req.body.start_time, req.body.event_date, req.body.notes, req.session.user.user_id])
 		.then(() => {
-			console.log('Event added to calendar successfully');
-			res.status(200).redirect('/calendar');
+			db.none(reminder_query, [req.session.user.user_id, req.body.start_time, req.body.event_name])
+				.then(() => {
+					console.log('Event added to calendar successfully');
+					res.status(200).redirect('/calendar');
+				}).catch(err => {
+					console.error('Error', err);
+					res.status(400).redirect('/calendar');
+				});
+			
 		})
 		.catch(err => {
 			console.error('Error', err);
@@ -494,9 +502,6 @@ app.post('/save-preferences', async (req, res) => {
     res.status(500).send('Error saving preferences');
   }
 });
-
-
-
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');

@@ -18,7 +18,6 @@ CREATE TABLE users (
 CREATE TABLE notification_preferences (
     preference_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    method VARCHAR(255) NOT NULL,
     time TIME NOT NULL,
     assignment_reminder VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
