@@ -19,7 +19,13 @@ Lock-In-Learn is an academic calendar app designed to help students effectively 
 - FullCalendar: provided documentation and features for the calendar
 
 ## Prerequisites to run the application
-- Install Docker Desktop and VScode
+- Install Docker Desktop and VScode to run the application
+- Install mocha and chai to run the tests
+    - npm install --global mocha
+    - npm install chai
+- Install Nodemailer and FullCalendar to get the notification and calendar features of the application
+    - npm install nodemailer
+    - npm install fullcalendar
 - In VScode, create a (.env) file inside the ProjectSourceCode folder with this inside the (.env):
 
     POSTGRES_USER="postgres"
