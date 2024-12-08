@@ -19,12 +19,25 @@ Lock-In-Learn is an academic calendar app designed to help students effectively 
 - FullCalendar: provided documentation and features for the calendar
 
 ## Prerequisites to run the application
-The prerequisities needed to run the application are...
+- Install Docker Desktop and VScode
+- In VScode, create a (.env) file inside the ProjectSourceCode folder with this inside the (.env):
+
+    POSTGRES_USER="postgres"
+    POSTGRES_PASSWORD="pwd"
+    POSTGRES_DB="users_db"
+    SESSION_SECRET="super duper secret!"
+    API_KEY="<Your_API_key>
 
 ## Steps to run the application locally
-1. 
+1. Open the project in VScode and run "cd ProjectSourceCode" into the terminal to make sure you are in that folder
+2. Ensure Docker is running locally
+3. In the terminal, run "docker compose up"
+4. This allows you to view the website on localhost:3000 on your local machine
+5. When finished running the application, run "docker compose down -v"
 
 ## How to run the tests
+The tests run automatically when you run "docker compose up" in the terminal after completing all the prerequisites.
+When run, the tests display in the terminal whether they passed or not.
 
 ## Link to the deployed application
 https://lock-in-learn.onrender.com
