@@ -28,11 +28,11 @@ Lock-In-Learn is an academic calendar app designed to help students effectively 
     - npm install fullcalendar
 - In VScode, create a (.env) file inside the ProjectSourceCode folder with this inside the (.env):
 
-    POSTGRES_USER="postgres"
-    POSTGRES_PASSWORD="pwd"
-    POSTGRES_DB="users_db"
-    SESSION_SECRET="super duper secret!"
-    API_KEY="<Your_API_key>
+    1. POSTGRES_USER="postgres"
+    2. POSTGRES_PASSWORD="pwd"
+    3. POSTGRES_DB="users_db"
+    4. SESSION_SECRET="super duper secret!"
+    5. API_KEY="<Your_API_key>
 
 ## Steps to run the application locally
 1. Open the project in VScode and run "cd ProjectSourceCode" into the terminal to make sure you are in that folder
